@@ -1,9 +1,8 @@
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { PersistGate } from 'redux-persist/integration/react';
 import './App.css';
 import AppRoute from './router/AppRoute';
-import { persistor, store } from './state/store';
+import { store } from './store';
 
 function App() {
   return (
@@ -21,9 +20,7 @@ const RouteProvider = () => (
 
 const ReduxProvider = () => (
   <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <RouteProvider />
-    </PersistGate>
+    <RouteProvider />
   </Provider>
 );
 
