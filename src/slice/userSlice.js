@@ -1,8 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  userName: '',
-  userId: '',
+  user: {},
   token: '',
   isLogin: false,
 };
@@ -10,9 +9,15 @@ const initialState = {
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    getToken(state, action) {
+      state.token = action.payload;
+    },
+    getUser(state, action) {
+      state.user = action.payload;
+    },
+  },
 });
 
-// eslint-disable-next-line no-empty-pattern
-export const {} = userSlice.actions;
+export const { getToken, getUser } = userSlice.actions;
 export default userSlice.reducer;
