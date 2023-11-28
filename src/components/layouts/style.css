@@ -1,0 +1,14 @@
+.main{
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.navbar{
+    background-color: bisque;
+    height: 100vh;
+    width: 300px;
+}
+
+.content{
+    width: 100%;
+}
