@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import Button from '../../components/common/button/button';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import './login.scss';
+import './register.scss';
 import { useDispatch } from 'react-redux';
 import { getToken } from '../../slice/userSlice';
 import { useRouter } from '../../hooks/useRouter';
@@ -11,9 +11,10 @@ import { useRouter } from '../../hooks/useRouter';
 const schema = yup.object({
   email: yup.string().required('Email is required!').email('Invalid email!'),
   password: yup.string().required('Password is required!'),
+  fullname: yup.string().required('Full Name is required!'),
 });
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const {
     register,
     handleSubmit,
@@ -32,34 +33,42 @@ const LoginPage = () => {
   }, []);
 
   const onSubmitForm = (data) => {
-    dispatch(getToken('have logged in'));
-    localStorage.setItem('token', 'have logged in');
+    dispatch(getToken('Have registered in'));
+    localStorage.setItem('token', 'Have registered in');
     pushRoute('/');
   };
 
   return (
-    <div className='login-container'>
-      <form className='login-form' onSubmit={handleSubmit(onSubmitForm)}>
-        <h2 className='login-title'>WELCOME TO NETNEST </h2>
+    <div className='register-container'>
+      <form className='register-form' onSubmit={handleSubmit(onSubmitForm)}>
+        <h2 className='register-title'>WELCOME TO NETNEST </h2>
         <input
-          className='login-email'
+          className='register-fullname'
+          type='text'
+          name='fullname'
+          placeholder='Full Name'
+          {...register('fullname')}
+        />
+        <p className='register-errText'>{errors.fullname?.message}</p>
+        <input
+          className='register-email'
           type='text'
           name='email'
           placeholder='Email'
           {...register('email')}
         />
-        <p className='login-errText'>{errors.email?.message}</p>
+        <p className='register-errText'>{errors.email?.message}</p>
         <input
-          className='login-password'
+          className='register-password'
           rows='10'
           type='password'
           name='password'
           placeholder='Password'
           {...register('password')}
         />
-        <p className='login-errText'>{errors.password?.message}</p>
-        <Button btnType='submit' text='Login' className='login-button' />
-        <a href='/register' className='login-dontHave'>
+        <p className='register-errText'>{errors.password?.message}</p>
+        <Button btnType='submit' text='Register' className='register-button' />
+        <a href='/register' className='register-dontHave'>
           Don't have an account?
         </a>
       </form>
@@ -67,4 +76,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
