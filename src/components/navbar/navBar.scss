@@ -1,0 +1,99 @@
+@import '../../styles/variable.scss';
+
+.navBar-container {
+  position: fixed;
+  height: 100vh;
+  width: 220px;
+  padding: 8px;
+  border-right: solid 1px #ccc;
+  display: flex;
+  flex-direction: column;
+
+  .navBar-logo,
+  .navBar-logout {
+    width: 28px;
+  }
+
+  .navBar-logo {
+    font-size: 24px;
+    margin: 25px 0 25px 12px;
+    font-weight: bold;
+    width: 60px;
+    cursor: pointer;
+
+    img {
+      border-radius: 100%;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+  .navBar-items-list {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .navBar-item {
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      padding: 12px;
+
+      &:hover {
+        background-color: $navBarHoverColor;
+        cursor: pointer;
+      }
+
+      img {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+        border-radius: 100%;
+        border: solid 2px #000;
+      }
+
+      svg {
+        width: 28px;
+      }
+
+      span {
+        margin-left: 16px;
+        font-size: 14px;
+      }
+
+      &.navBar-item-create {
+        svg {
+          border-radius: 8px;
+          border: solid 2.3px #000;
+        }
+      }
+
+      &.active {
+        font-weight: bold;
+        background-color: $navBarActiveColor;
+      }
+    }
+  }
+
+  .navBar-logout {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: $navBarHoverColor;
+      cursor: pointer;
+    }
+
+    svg {
+      width: 28px;
+      height: 100%;
+    }
+    span {
+      margin-left: 16px;
+      font-size: 14px;
+    }
+  }
+}

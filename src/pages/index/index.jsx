@@ -1,11 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const IndexPage = () => {
-  return <div>
-    <Navbar/>
-    <smt/>
-    <footer/>
-  </div>;
+  return <div>IndexPage</div>;
 };
 
 export default IndexPage;
