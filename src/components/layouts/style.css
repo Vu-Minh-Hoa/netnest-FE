@@ -1,0 +1,12 @@
+.main {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.navbar {
+  height: 100vh;
+}
+
+.content {
+  width: 100%;
+}
