@@ -23,14 +23,14 @@
 
     .register-title {
       text-align: center;
-      font-size: 25px;
+      font-size: 32px;
       font-weight: bold;
       margin-bottom: 10px;
     }
 
     .register-email,
     .register-password,
-    .register-fullname {
+    .register-username {
       font-size: 19px;
       width: 100%;
       padding: 10px;
@@ -50,6 +50,7 @@
     .register-dontHave {
       color: $linkColor;
       text-underline-offset: 3px;
+      text-decoration: underline;
       &:hover {
         cursor: pointer;
         opacity: 0.6;

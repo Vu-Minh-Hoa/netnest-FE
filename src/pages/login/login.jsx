@@ -40,7 +40,7 @@ const LoginPage = () => {
   return (
     <div className='login-container'>
       <form className='login-form' onSubmit={handleSubmit(onSubmitForm)}>
-        <h2 className='login-title'>WELCOME TO NETNEST </h2>
+        <h2 className='login-title'>𝓝𝓮𝓽𝓝𝓮𝓼𝓽</h2>
         <input
           className='login-email'
           type='text'

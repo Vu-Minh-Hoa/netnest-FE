@@ -11,7 +11,7 @@ import { useRouter } from '../../hooks/useRouter';
 const schema = yup.object({
   email: yup.string().required('Email is required!').email('Invalid email!'),
   password: yup.string().required('Password is required!'),
-  fullname: yup.string().required('Full Name is required!'),
+  username: yup.string().required('Full Name is required!'),
 });
 
 const RegisterPage = () => {
@@ -41,15 +41,15 @@ const RegisterPage = () => {
   return (
     <div className='register-container'>
       <form className='register-form' onSubmit={handleSubmit(onSubmitForm)}>
-        <h2 className='register-title'>WELCOME TO NETNEST </h2>
+        <h2 className='register-title'>𝓝𝓮𝓽𝓝𝓮𝓼𝓽</h2>
         <input
-          className='register-fullname'
+          className='register-username'
           type='text'
-          name='fullname'
-          placeholder='Full Name'
-          {...register('fullname')}
+          name='username'
+          placeholder='Username'
+          {...register('username')}
         />
-        <p className='register-errText'>{errors.fullname?.message}</p>
+        <p className='register-errText'>{errors.username?.message}</p>
         <input
           className='register-email'
           type='text'
@@ -68,8 +68,8 @@ const RegisterPage = () => {
         />
         <p className='register-errText'>{errors.password?.message}</p>
         <Button btnType='submit' text='Register' className='register-button' />
-        <a href='/register' className='register-dontHave'>
-          Don't have an account?
+        <a href='/login' className='register-dontHave'>
+          Already have an account
         </a>
       </form>
     </div>
