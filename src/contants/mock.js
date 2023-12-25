@@ -182,3 +182,78 @@ export const POST = {
   commentAmount: 6,
   comments: COMMENT_LIST,
 };
+
+export const USER = [
+  {
+    id: 1,
+    img: 'https://i.pravatar.cc/150?u=fake@pravatar.com',
+    username: 'smt',
+    fullname: 'Diem Tran',
+    caption: 'caption1231',
+    likeAmount: 5,
+    date: 1702230523501,
+    commentAmount: 6,
+    comments: COMMENT_LIST,
+  },
+  {
+    id: 1,
+    img: 'https://i.pravatar.cc/150?u=fake@pravatar.com',
+    username: 'smt',
+    fullname: 'Diem Tran',
+    caption: 'caption1231',
+    likeAmount: 5,
+    date: 1702230523501,
+    commentAmount: 6,
+    comments: COMMENT_LIST,
+  },
+  {
+    id: 1,
+    img: 'https://i.pravatar.cc/150?u=fake@pravatar.com',
+    username: 'smt',
+    fullname: 'Diem Tran',
+    caption: 'caption1231',
+    likeAmount: 5,
+    date: 1702230523501,
+    commentAmount: 6,
+    comments: COMMENT_LIST,
+  },
+  {
+    id: 1,
+    img: 'https://i.pravatar.cc/150?u=fake@pravatar.com',
+    username: 'smt',
+    fullname: 'Diem Tran',
+    caption: 'caption1231',
+    likeAmount: 5,
+    date: 1702230523501,
+    commentAmount: 6,
+    comments: COMMENT_LIST,
+  },
+  {
+    id: 1,
+    img: 'https://i.pravatar.cc/150?u=fake@pravatar.com',
+    username: 'smt',
+    fullname: 'Diem Tran',
+    caption: 'caption1231',
+    likeAmount: 5,
+    date: 1702230523501,
+    commentAmount: 6,
+    comments: COMMENT_LIST,
+  },
+  {
+    id: 1,
+    img: 'https://i.pravatar.cc/150?u=fake@pravatar.com',
+    username: 'smt',
+    fullname: 'Diem Tran',
+    caption: 'caption1231',
+    likeAmount: 5,
+    date: 1702230523501,
+    commentAmount: 6,
+    comments: COMMENT_LIST,
+  },
+];
+
+export const SEARCH_USER = [
+  {
+    id: 1,
+  },
+];
