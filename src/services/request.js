@@ -1,14 +1,15 @@
-import axiosBase from 'axios';
+import axiosBase from "axios";
 
 const initRequest = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const headers = {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
   };
 
   const axios = axiosBase.create({
-    baseURL: process.env.DEV_ENV,
+    baseURL: "http://localhost:8080",
+    headers,
     // withCredentials: true,
   });
 
@@ -17,8 +18,8 @@ const initRequest = () => {
       return response;
     },
     async (error) => {
-      console.warn('▼Api Error▼', error);
-    },
+      console.warn("▼Api Error▼", error);
+    }
   );
 
   return axios;
@@ -38,16 +39,16 @@ const generateUrl = (url, params) => {
 };
 
 const generateQueryString = (query) => {
-  if (!query) return '';
+  if (!query) return "";
   const keys = Object.keys(query);
   if (keys.length > 0) {
     const qString = [];
     for (const key of keys) {
       qString.push(`${key}=${query[key]}`);
     }
-    return `?${qString.join('&')}`;
+    return `?${qString.join("&")}`;
   }
-  return '';
+  return "";
 };
 
 const request = async (callback, reqOption) => {
@@ -58,7 +59,7 @@ const request = async (callback, reqOption) => {
     const response = await callback(axios, genUrl);
     return response.data;
   } catch (error) {
-    console.warn('▼Api Error▼', error);
+    console.warn("▼Api Error▼", error);
     // return undefined;
   }
 };
@@ -67,7 +68,7 @@ export const get = async (reqOption) => {
   return await request((axios, genUrl) => {
     return axios.get(
       `${genUrl}${generateQueryString(reqOption.query)}`,
-      reqOption.config,
+      reqOption.config
     );
   }, reqOption);
 };
@@ -96,7 +97,7 @@ export const upload = async (reqOption) => {
       ...reqOption.config,
       headers: {
         ...reqOption.config?.headers,
-        'Content-type': 'multipart/form-data',
+        "Content-type": "multipart/form-data",
       },
     });
   }, reqOption);
@@ -108,7 +109,7 @@ export const putFormData = async (reqOption) => {
       ...reqOption.config,
       headers: {
         ...reqOption.config?.headers,
-        'Content-type': 'multipart/form-data',
+        "Content-type": "multipart/form-data",
       },
     });
   }, reqOption);
