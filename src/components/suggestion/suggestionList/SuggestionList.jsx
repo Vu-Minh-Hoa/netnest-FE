@@ -1,27 +1,27 @@
-import React from 'react';
-import './SuggestionList.scss';
-import cn from 'classnames';
+import React from "react";
+import "./SuggestionList.scss";
+import cn from "classnames";
 
 const SuggestionItem = ({ id, img, ma, name, isFollowed = false }) => {
   const handleFollow = () => {};
 
   return (
-    <div className='item' key={id}>
-      <div className='info-item'>
-        <img src={img} alt='' />
-        <div className='group-info'>
-          <span className='username'>{ma}</span>
+    <div className="item" key={id}>
+      <div className="info-item">
+        <img src={`data:image/png;base64, ${img}`} alt="" />
+        <div className="group-info">
+          <span className="username">{ma}</span>
           <h4>{name}</h4>
         </div>
       </div>
       <button
         onClick={() => handleFollow()}
         className={cn(
-          { 'btn-follow': !isFollowed },
-          { 'btn-followed': isFollowed },
+          { "btn-follow": !isFollowed },
+          { "btn-followed": isFollowed }
         )}
       >
-        {false ? '...loading' : isFollowed ? 'Following' : 'Follow'}
+        {false ? "...loading" : isFollowed ? "Following" : "Follow"}
       </button>
     </div>
   );
@@ -29,13 +29,13 @@ const SuggestionItem = ({ id, img, ma, name, isFollowed = false }) => {
 
 const SuggestionList = ({ listItem }) => {
   return (
-    <div className='list-item'>
+    <div className="list-item">
       {listItem?.map((item) => (
         <SuggestionItem
-          key={item.id}
-          img={item.img}
-          ma={item.ma}
-          name={item.name}
+          key={item.userId}
+          img={item.base64Image}
+          ma={item.fullName}
+          name={item.userName}
         />
       ))}
     </div>
