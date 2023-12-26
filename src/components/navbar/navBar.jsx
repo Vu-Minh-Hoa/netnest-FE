@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import ChatSvg from '../../assets/svg/chatSvg';
-import CreateSvg from '../../assets/svg/createSvg';
-import HomeSvg from '../../assets/svg/homeSVG';
-import LogoutSvg from '../../assets/svg/logoutSvg';
-import './navBar.scss';
-import SearchSvg from '../../assets/svg/searchSvg';
-import defaultUser from '../../assets/img/user.jpg';
-import logoImg from '../../assets/img/logo.jpg';
-import { useRouter } from '../../hooks/useRouter';
-import { HOME_LINK, PROFILE_LINK } from '../../links/link';
-import classNames from 'classnames';
-import SearchBar from '../search/search';
-import { USER } from '../../contants/mock';
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import ChatSvg from "../../assets/svg/chatSvg";
+import CreateSvg from "../../assets/svg/createSvg";
+import HomeSvg from "../../assets/svg/homeSVG";
+import LogoutSvg from "../../assets/svg/logoutSvg";
+import "./navBar.scss";
+import SearchSvg from "../../assets/svg/searchSvg";
+import defaultUser from "../../assets/img/user.jpg";
+import logoImg from "../../assets/img/logo.jpg";
+import { useRouter } from "../../hooks/useRouter";
+import { HOME_LINK, PROFILE_LINK } from "../../links/link";
+import classNames from "classnames";
+import SearchBar from "../search/search";
+import { USER } from "../../contants/mock";
 
 const NavBar = () => {
   const [isSmallTab, setIsSmallTab] = useState(false);
@@ -22,7 +22,7 @@ const NavBar = () => {
   const [isNotificationBarActive, setIsNotificationBarActive] = useState(false);
   const { pushRoute } = useRouter();
   const location = useLocation();
-  const currentPath = location.pathname.split('/')[1];
+  const currentPath = location.pathname.split("/")[1];
 
   useEffect(() => {
     handleActiveTab();
@@ -37,25 +37,25 @@ const NavBar = () => {
   const handleActiveTab = (currentTab) => {
     if (isSearchBarActive) return;
 
-    const navBarItemList = document.querySelector('.navBar-items-list');
-    const navBarItems = navBarItemList?.querySelectorAll('.navBar-item');
-    const active = navBarItemList?.querySelector('.active');
-    const navBarHome = navBarItemList?.querySelector('.navBar-item-home');
+    const navBarItemList = document.querySelector(".navBar-items-list");
+    const navBarItems = navBarItemList?.querySelectorAll(".navBar-item");
+    const active = navBarItemList?.querySelector(".active");
+    const navBarHome = navBarItemList?.querySelector(".navBar-item-home");
 
     if (active) {
-      active.classList.remove('active');
+      active.classList.remove("active");
     }
 
     if (currentPath.length === 0 && !currentTab) {
-      navBarHome.classList.add('active');
+      navBarHome.classList.add("active");
       return;
     }
 
     navBarItems.forEach((item) => {
       if (
-        item.classList.contains('navBar-item-' + (currentTab || currentPath))
+        item.classList.contains("navBar-item-" + (currentTab || currentPath))
       ) {
-        item.classList.add('active');
+        item.classList.add("active");
       }
     });
   };
@@ -72,19 +72,18 @@ const NavBar = () => {
     if (value.length) {
       setSearchedUser([]);
     }
-    console.log(value);
   };
 
   return (
     <>
       <nav
-        className={classNames('navBar-container', { 'small-nav': isSmallTab })}
+        className={classNames("navBar-container", { "small-nav": isSmallTab })}
       >
-        <div className='navBar-logo'>
+        <div className="navBar-logo">
           <span>𝓝𝓮𝓽𝓝𝓮𝓼𝓽</span>
-          <img src={logoImg} alt='logo' />
+          <img src={logoImg} alt="logo" />
         </div>
-        <ul className='navBar-items-list'>
+        <ul className="navBar-items-list">
           <li
             onClick={() => {
               setIsSmallTab(false);
@@ -95,47 +94,47 @@ const NavBar = () => {
                 handleRedirect(HOME_LINK);
               }
             }}
-            className='navBar-item navBar-item-home'
+            className="navBar-item navBar-item-home"
           >
             <HomeSvg />
-            <span className='navBar-item-desc'>Home</span>
+            <span className="navBar-item-desc">Home</span>
           </li>
           <li
-            className='navBar-item navBar-item-search'
+            className="navBar-item navBar-item-search"
             onClick={() => {
               setIsSmallTab(!isSmallTab);
               setIsSearchBarActive(!isSearchBarActive);
-              handleResizeNavBar('search');
+              handleResizeNavBar("search");
             }}
           >
             <SearchSvg />
-            <span className='navBar-item-desc'>Search</span>
+            <span className="navBar-item-desc">Search</span>
           </li>
-          <li className='navBar-item navBar-item-chat'>
+          <li className="navBar-item navBar-item-chat">
             <ChatSvg />
-            <span className='navBar-item-desc'>Messgage</span>
+            <span className="navBar-item-desc">Messgage</span>
           </li>
-          <li className='navBar-item navBar-item-create'>
+          <li className="navBar-item navBar-item-create">
             <CreateSvg />
-            <span className='navBar-item-desc'>Create</span>
+            <span className="navBar-item-desc">Create</span>
           </li>
           <li
             onClick={() => {
               setIsSmallTab(false);
               setIsSearchBarActive(false);
-              if (currentPath === 'profile') {
+              if (currentPath === "profile") {
                 handleResizeNavBar();
               } else {
                 handleRedirect(PROFILE_LINK);
               }
             }}
-            className='navBar-item navBar-item-profile'
+            className="navBar-item navBar-item-profile"
           >
-            <img src={defaultUser} alt='' />
-            <span className='navBar-item-desc'>Profile</span>
+            <img src={defaultUser} alt="" />
+            <span className="navBar-item-desc">Profile</span>
           </li>
         </ul>
-        <div className='navBar-logout' onClick={() => handleLogout()}>
+        <div className="navBar-logout" onClick={() => handleLogout()}>
           <LogoutSvg />
           <span>Logout</span>
         </div>

@@ -21,4 +21,5 @@ export const API_LIST = {
   logout: "/logout",
   register: "/register",
   home: "/home",
+  suggest_friend: "/suggestFriend",
 };

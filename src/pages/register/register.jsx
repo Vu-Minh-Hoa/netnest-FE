@@ -39,7 +39,6 @@ const RegisterPage = () => {
   }, []);
 
   const onSubmitForm = async (data) => {
-    console.log(data);
     await action({
       action: async () =>
         post({

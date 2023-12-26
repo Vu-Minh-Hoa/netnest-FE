@@ -47,7 +47,6 @@ const LoginPage = () => {
         }),
       onSuccess: async ({ token }) => {
         if (!token) return;
-        console.log(token);
         dispatch(setToken(token));
         localStorage.setItem("token", token);
         pushRoute("/");

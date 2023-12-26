@@ -2,6 +2,7 @@ import axiosBase from "axios";
 
 const initRequest = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
+
   const headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -65,6 +66,7 @@ const request = async (callback, reqOption) => {
 };
 
 export const get = async (reqOption) => {
+  console.log(reqOption);
   return await request((axios, genUrl) => {
     return axios.get(
       `${genUrl}${generateQueryString(reqOption.query)}`,
