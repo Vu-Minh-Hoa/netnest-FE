@@ -1,13 +1,51 @@
-import { useState } from 'react';
-import Post from '../post/post';
-import './postList.scss';
-import ViewPost from '../viewPost/viewPost';
-import { POST } from '../../contants/mock';
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { API_LIST } from "../../contants/common";
+import { useAction } from "../../hooks/useAction";
+import { get } from "../../services/request";
+import Post from "../post/post";
+import ViewPost from "../viewPost/viewPost";
+import "./postList.scss";
 
-const PostList = ({ postList }) => {
+const PostList = ({ postList = [] }) => {
   const [isClickPost, setIsClickPost] = useState(false);
+  const [viewPostData, setViewPostData] = useState();
+  const [postedComment, setPostedComment] = useState();
+  const { token } = useSelector((store) => store.user);
+  const { action } = useAction();
 
-  const handleClickPost = () => {
+  useEffect(() => {
+    if (!isClickPost) return;
+  }, [isClickPost]);
+
+  useEffect(() => {
+    getPostDetail(postedComment);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postedComment]);
+
+  const getPostDetail = async (postId) => {
+    await action({
+      action: async () =>
+        get({
+          url: API_LIST.post_detail,
+          config: {
+            headers: { authorization: "Bearer " + token },
+            params: { postId },
+          },
+        }),
+      onSuccess: async (data) => {
+        setViewPostData(data);
+      },
+    });
+  };
+
+  const handlePostCommenRecallPostDetail = (postId) => {
+    setPostedComment(postId);
+  };
+
+  const handleClickPost = (postId) => {
+    getPostDetail(postId);
     setIsClickPost(true);
   };
 
@@ -18,10 +56,14 @@ const PostList = ({ postList }) => {
   return (
     <>
       {isClickPost && (
-        <ViewPost viewPostInfo={POST} onClose={handleClosePost} />
+        <ViewPost
+          postedComment={handlePostCommenRecallPostDetail}
+          viewPostInfo={viewPostData}
+          onClose={handleClosePost}
+        />
       )}
-      <div className='post-list__container'>
-        <div className='post-list__suggest-post'>
+      <div className="post-list__container">
+        <div className="post-list__suggest-post">
           {postList.map((postInfo, key) => {
             return (
               <Post onClick={handleClickPost} key={key} postInfo={postInfo} />

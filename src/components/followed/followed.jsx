@@ -1,11 +1,11 @@
 import "./followed.scss";
 
-const FollowedList = ({ listUser }) => {
+const FollowedList = ({ listUser = [] }) => {
   return (
     <div className="followed-list-container">
       {listUser.map((user, key) => {
         return (
-          <div key={key} className="followed-user">
+          <div id={user.userId} key={key} className="followed-user">
             <div className="followed-user-img__wrapper">
               <div className="followed-user-img">
                 <img
