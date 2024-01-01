@@ -85,7 +85,7 @@ const HomePage = () => {
     });
   };
 
-  if (followingData) {
+  if (!followingData) {
     return (
       <div className="homePage-suggestion">
         <div className="homePage-suggestion-content">

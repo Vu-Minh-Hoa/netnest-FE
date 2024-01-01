@@ -13,6 +13,10 @@ import { HOME_LINK, PROFILE_LINK } from "../../links/link";
 import classNames from "classnames";
 import SearchBar from "../search/search";
 import { USER } from "../../contants/mock";
+import { useAction } from "../../hooks/useAction";
+import { get } from "../../services/request";
+import { API_LIST } from "../../contants/common";
+import { useSelector } from "react-redux";
 
 const NavBar = () => {
   const [isSmallTab, setIsSmallTab] = useState(false);
@@ -20,6 +24,8 @@ const NavBar = () => {
   const [searchedUsers, setSearchedUser] = useState([]);
   const [recentSearchedUser, setRecentSearchedUser] = useState([]);
   const [isNotificationBarActive, setIsNotificationBarActive] = useState(false);
+  const { token } = useSelector((store) => store.user);
+  const { action } = useAction();
   const { pushRoute } = useRouter();
   const location = useLocation();
   const currentPath = location.pathname.split("/")[1];
@@ -68,10 +74,19 @@ const NavBar = () => {
     pushRoute(route);
   };
 
-  const handleSearchBar = (value) => {
-    if (value.length) {
-      setSearchedUser([]);
-    }
+  const handleSearchBar = async (value) => {
+    await action({
+      action: async () =>
+        get({
+          url: `${API_LIST.get_search_user}/${value}`,
+          config: {
+            headers: { authorization: "Bearer " + token },
+          },
+        }),
+      onSuccess: async (data) => {
+        setSearchedUser(data);
+      },
+    });
   };
 
   return (

@@ -53,13 +53,15 @@
     justify-content: center;
     background-color: #000;
     cursor: pointer;
+    border-radius: 3px;
+    overflow: hidden;
 
     img {
       width: 100%;
       height: 100%;
       max-height: 600px;
+      max-width: 400px;
       object-fit: contain;
-      border-radius: 3px;
     }
   }
   .post__like {
@@ -67,6 +69,16 @@
     margin-bottom: 8px;
   }
   .post__action {
+    margin: 8px 0;
+    &.post__action-liked {
+      color: #ccc;
+      fill: #ccc;
+    }
+
+    svg {
+      width: 24px;
+
+    }
   }
   .post__caption {
     display: flex;
