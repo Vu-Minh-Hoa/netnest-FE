@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { API_LIST } from "../../contants/common";
-import { useAction } from "../../hooks/useAction";
-import { get } from "../../services/request";
-import Post from "../post/post";
-import ViewPost from "../viewPost/viewPost";
-import "./postList.scss";
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { API_LIST } from '../../contants/common';
+import { useAction } from '../../hooks/useAction';
+import { get } from '../../services/request';
+import Post from '../post/post';
+import ViewPost from '../viewPost/viewPost';
+import './postList.scss';
 
 const PostList = ({ postList = [] }) => {
   const [isClickPost, setIsClickPost] = useState(false);
@@ -19,6 +19,8 @@ const PostList = ({ postList = [] }) => {
   }, [isClickPost]);
 
   useEffect(() => {
+    if (!postedComment) return;
+
     getPostDetail(postedComment);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -27,10 +29,10 @@ const PostList = ({ postList = [] }) => {
   const getPostDetail = async (postId) => {
     await action({
       action: async () =>
-        get({
+        await get({
           url: API_LIST.post_detail,
           config: {
-            headers: { authorization: "Bearer " + token },
+            headers: { authorization: 'Bearer ' + token },
             params: { postId },
           },
         }),
@@ -50,6 +52,7 @@ const PostList = ({ postList = [] }) => {
   };
 
   const handleClosePost = () => {
+    setViewPostData('');
     setIsClickPost(false);
   };
 
@@ -62,8 +65,8 @@ const PostList = ({ postList = [] }) => {
           onClose={handleClosePost}
         />
       )}
-      <div className="post-list__container">
-        <div className="post-list__suggest-post">
+      <div className='post-list__container'>
+        <div className='post-list__suggest-post'>
           {postList.map((postInfo, key) => {
             return (
               <Post onClick={handleClickPost} key={key} postInfo={postInfo} />

@@ -1,15 +1,13 @@
-import "./viewPost.scss";
-import defaultUserImg from "../../assets/img/user.jpg";
-import { useEffect, useRef, useState } from "react";
-import ModalWrapper from "../common/modalWrapper/modalWrapper";
-import HearthSvg from "../../assets/svg/hearthSvg";
-import classNames from "classnames";
-import CloseSvg from "../../assets/svg/closeSvg";
-import Dot from "../common/dot/dot";
-import { useAction } from "../../hooks/useAction";
-import { post } from "../../services/request";
-import { API_LIST } from "../../contants/common";
-import { useSelector } from "react-redux";
+import classNames from 'classnames';
+import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import CloseSvg from '../../assets/svg/closeSvg';
+import HearthSvg from '../../assets/svg/hearthSvg';
+import { API_LIST } from '../../contants/common';
+import { useAction } from '../../hooks/useAction';
+import { post } from '../../services/request';
+import Dot from '../common/dot/dot';
+import './viewPost.scss';
 
 const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const {
@@ -19,9 +17,9 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
     base64Video,
   } = viewPostInfo || {};
   const commentRef = useRef();
-  const [commentValue, setCommentValue] = useState("");
-  const [followSuccess, setFollowSuccess] = useState("");
-  const [isLoading, setIsLoading] = useState("");
+  const [commentValue, setCommentValue] = useState('');
+  const [followSuccess, setFollowSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState('');
   const { action } = useAction();
   const { token } = useSelector((store) => store.user);
   // useEffect(() => {
@@ -36,10 +34,10 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
     setIsLoading(true);
     await action({
       action: async () =>
-        post({
+        await post({
           url: API_LIST.post_add_following,
           config: {
-            headers: { authorization: "Bearer " + token },
+            headers: { authorization: 'Bearer ' + token },
             params: { userName: viewPostInfo.createBy.userName },
           },
         }),
@@ -53,19 +51,19 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const handlePostComment = async () => {
     await action({
       action: async () =>
-        post({
+        await post({
           url: `${API_LIST.post_add_comment}/${viewPostInfo.postID}/addComments`,
           data: {
             comment: commentValue,
           },
           config: {
-            headers: { authorization: "Bearer " + token },
+            headers: { authorization: 'Bearer ' + token },
           },
         }),
       onSuccess: async (data) => {
         await postComment(data.postID);
-        setCommentValue("");
-        commentRef.current.innerHTML = "";
+        setCommentValue('');
+        commentRef.current.innerHTML = '';
       },
     });
   };
@@ -82,77 +80,77 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   return (
     <>
       {viewPostInfo && (
-        <div className="view-post__container" onClick={() => handleClose()}>
-          <div className="view-post__close" onClick={() => handleClose()}>
+        <div className='view-post__container' onClick={() => handleClose()}>
+          <div className='view-post__close' onClick={() => handleClose()}>
             <CloseSvg />
           </div>
-          <div className="view-post" onClick={(e) => e.stopPropagation()}>
+          <div className='view-post' onClick={(e) => e.stopPropagation()}>
             {base64Image && (
-              <div className="view-post__img">
-                <img src={`data:image;base64, ${base64Image}`} alt="" />
+              <div className='view-post__img'>
+                <img src={`data:image;base64, ${base64Image}`} alt='' />
               </div>
             )}
             {!base64Image && base64Video && (
-              <div className="view-post__img">
+              <div className='view-post__img'>
                 <video controls>
                   <source src={`data:video;base64, ${base64Video}`} />
                 </video>
               </div>
             )}
-            <div className="view-post__comment-section">
-              <div className="view-post__user-info view-post__author-info">
-                <div className="view-post__user-img view-post__comment-section__user-img">
-                  <img src={`data:image;base64, ${base64Image}`} alt="" />
+            <div className='view-post__comment-section'>
+              <div className='view-post__user-info view-post__author-info'>
+                <div className='view-post__user-img view-post__comment-section__user-img'>
+                  <img src={`data:image;base64, ${base64Image}`} alt='' />
                 </div>
-                <div className="view-post__comment-section__user-name">
+                <div className='view-post__comment-section__user-name'>
                   {viewPostInfo.createBy?.userName}
                 </div>
                 {!followSuccess && (
                   <>
                     <Dot />
                     <div
-                      className="view-post__comment-section__follow-btn"
+                      className='view-post__comment-section__follow-btn'
                       onClick={() => handleFollow()}
                     >
-                      {isLoading ? "...loading" : "Follow"}
+                      {isLoading ? '...loading' : 'Follow'}
                     </div>
                   </>
                 )}
               </div>
-              <div className="view-post__comment-section__comment__wrapper">
-                <ul className="view-post__comment-section__comments">
+              <div className='view-post__comment-section__comment__wrapper'>
+                <ul className='view-post__comment-section__comments'>
                   {comments.length > 0 &&
                     comments.map((commentsItem, key) => {
                       return (
                         <li
                           key={key}
-                          className="view-post__user-info view-post__comment-section__comment"
+                          className='view-post__user-info view-post__comment-section__comment'
                         >
-                          <div className="view-post__comment-section__comment__user-img__wrapper">
-                            <div className="view-post__user-img view-post__comment-section__comment__user-img">
+                          <div className='view-post__comment-section__comment__user-img__wrapper'>
+                            <div className='view-post__user-img view-post__comment-section__comment__user-img'>
                               <img
                                 src={`data:image;base64, ${commentsItem.user.base64Image}`}
-                                alt=""
+                                alt=''
                               />
                             </div>
                           </div>
-                          <div className="view-post__comment-section__user-info">
-                            <p className="view-post__user-comment view-post__comment-section__comment__text">
-                              <span className="view-post__user-name">
+                          <div className='view-post__comment-section__user-info'>
+                            <p className='view-post__user-comment view-post__comment-section__comment__text'>
+                              <span className='view-post__user-name'>
                                 {commentsItem.user.userName}&nbsp;
                               </span>
                               {commentsItem.comment}
                             </p>
                             {/* {commentsItem.user.countLike && ( */}
-                            <div className="view-post__action">
+                            <div className='view-post__action'>
                               <span>
                                 {commentsItem.user.countLike || 0} likes
                               </span>
                             </div>
                             {/* )} */}
                           </div>
-                          <div className="view-post__reaction">
-                            <div className="view-post__reaction__like">
+                          <div className='view-post__reaction'>
+                            <div className='view-post__reaction__like'>
                               <HearthSvg />
                             </div>
                           </div>
@@ -161,28 +159,28 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
                     })}
                 </ul>
               </div>
-              <div className="view-post__reaction-timestamp">
-                <div className="view-post__reaction">
-                  <div className="view-post__reaction__like">
+              <div className='view-post__reaction-timestamp'>
+                <div className='view-post__reaction'>
+                  <div className='view-post__reaction__like'>
                     <HearthSvg />
                   </div>
                 </div>
-                <div className="view-post__like"> {countLike || 0} likes </div>
+                <div className='view-post__like'> {countLike || 0} likes </div>
                 {/* <div className='view-post__timestamp'>
                 </div> */}
               </div>
-              <div className="view-post__comment">
+              <div className='view-post__comment'>
                 <span
                   onInput={handleComment}
-                  className={classNames("view-post__comment-input", {
-                    "view-post__comment-input__has-value": commentValue,
+                  className={classNames('view-post__comment-input', {
+                    'view-post__comment-input__has-value': commentValue,
                   })}
                   ref={commentRef}
                   contentEditable
                 ></span>
                 <span
-                  className={classNames("view-post__comment-submit", {
-                    "view-post__comment-submit__has-value": commentValue,
+                  className={classNames('view-post__comment-submit', {
+                    'view-post__comment-submit__has-value': commentValue,
                   })}
                   onClick={() => handlePostComment()}
                 >

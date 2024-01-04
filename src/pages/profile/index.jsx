@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import Info from "../../components/profile/info";
-import { API_LIST } from "../../contants/common";
-import { useAction } from "../../hooks/useAction";
-import { get } from "../../services/request";
-import "./style.scss";
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Info from '../../components/profile/info';
+import { API_LIST } from '../../contants/common';
+import { useAction } from '../../hooks/useAction';
+import { get } from '../../services/request';
+import './style.scss';
+import EditModal from '../../components/edit/editModal';
 
 const ProfilePage = () => {
   const [userInfo, setUserInfo] = useState({});
@@ -21,10 +22,10 @@ const ProfilePage = () => {
   const getUserDetail = async () => {
     await action({
       action: async () =>
-        get({
+        await get({
           url: API_LIST.get_user_detail,
           config: {
-            headers: { authorization: "Bearer " + token },
+            headers: { authorization: 'Bearer ' + token },
           },
         }),
       onSuccess: async (data) => {
@@ -33,7 +34,12 @@ const ProfilePage = () => {
     });
   };
 
-  return <Info userInfo={userInfo} />;
+  return (
+    <>
+      <Info userInfo={userInfo} />
+      {/* <EditModal /> */}
+    </>
+  );
 };
 
 export default ProfilePage;

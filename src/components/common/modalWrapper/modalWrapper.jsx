@@ -1,9 +1,17 @@
+import CloseSvg from '../../../assets/svg/closeSvg';
 import './modalWrapper.scss';
 
-const ModalWrapper = ({ children }) => {
+const ModalWrapper = ({ children, onClose }) => {
+  const handleClose = () => {
+    onClose && onClose();
+  };
+
   return (
     <div className='modal-wrapper'>
-      <div className='modal'>{children}</div>
+      <div className='modal__close' onClick={() => handleClose()}>
+        <CloseSvg />
+      </div>
+      <div className='modal-container'>{children}</div>
     </div>
   );
 };
