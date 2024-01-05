@@ -25,3 +25,14 @@
   .sendbird-channel-preview__content__upper__last-message-at {
   display: none;
 }
+
+.main-content {
+  height: 100vh;
+}
+
+.chat-page-chat {
+  height: 100% !important;
+  .col {
+    padding: 0;
+  }
+}

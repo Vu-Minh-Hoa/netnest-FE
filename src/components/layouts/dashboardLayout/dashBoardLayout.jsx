@@ -9,7 +9,7 @@ import { API_LIST } from '../../../contants/common';
 import { setUserDetail } from '../../../slice/userSlice';
 import { get } from '../../../services/request';
 import { useEffect } from 'react';
-// import ChatPage from '../../../pages/chat/chat';
+import ChatPage from '../../../pages/chat/chat';
 import HomePage from '../../../pages/home/home';
 
 const DashBoardLayout = () => {
@@ -43,7 +43,7 @@ const DashBoardLayout = () => {
         <Routes>
           <Route path={HOME_LINK} element={<HomePage />} />
           <Route path={PROFILE_LINK} element={<ProfilePage />} />
-          {/* <Route path={CHAT_LINK} element={<ChatPage />} /> */}
+          <Route path={CHAT_LINK} element={<ChatPage />} />
         </Routes>
       </div>
     </div>
