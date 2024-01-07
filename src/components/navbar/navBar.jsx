@@ -17,8 +17,9 @@ import { get } from '../../services/request';
 import CreateModal from '../createModal/createModal';
 import SearchBar from '../search/search';
 import './navBar.scss';
+import { current } from '@reduxjs/toolkit';
 
-const NavBar = () => {
+const NavBar = ({ onResizeNavBar }) => {
   const [isSmallTab, setIsSmallTab] = useState(false);
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
   const [isSearchBarActive, setIsSearchBarActive] = useState(false);
@@ -30,6 +31,11 @@ const NavBar = () => {
   const { pushRoute } = useRouter();
   const location = useLocation();
   const currentPath = location.pathname.split('/')[1];
+
+  useEffect(() => {
+    onResizeNavBar && onResizeNavBar(isSmallTab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSmallTab]);
 
   useEffect(() => {
     handleActiveTab();
@@ -69,6 +75,7 @@ const NavBar = () => {
 
   const handleResizeNavBar = (currentTab) => {
     handleActiveTab(currentTab);
+    onResizeNavBar && onResizeNavBar(isSmallTab);
   };
 
   const handleRedirect = (route) => {
@@ -128,7 +135,8 @@ const NavBar = () => {
           <li
             className='navBar-item navBar-item-search'
             onClick={() => {
-              setIsSmallTab(!isSmallTab);
+              if (currentPath !== 'chat') setIsSmallTab(!isSmallTab);
+
               setIsSearchBarActive(!isSearchBarActive);
               handleResizeNavBar('search');
             }}
@@ -138,7 +146,12 @@ const NavBar = () => {
           </li>
           <li
             className='navBar-item navBar-item-chat'
-            onClick={() => handleRedirect(CHAT_LINK)}
+            onClick={() => {
+              handleRedirect(CHAT_LINK);
+              setIsSmallTab(true);
+              setIsSearchBarActive(false);
+              handleResizeNavBar('chat');
+            }}
           >
             <ChatSvg />
             <span className='navBar-item-desc'>Messgage</span>

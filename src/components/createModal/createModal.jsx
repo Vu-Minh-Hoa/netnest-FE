@@ -16,13 +16,12 @@ import { updateImage_Video } from '../../services/postImgVideo.service';
 
 const CreateModal = ({ onClose, onCreateSuccess }) => {
   const inputRef = useRef();
+  const { action } = useAction();
   const { user } = useSelector((store) => store.user);
   const { token } = useSelector((store) => store.user);
   const [previewVideo, setPreviewVideo] = useState('');
   const [previewImage, setPreviewImage] = useState('');
   const [captionValue, setCaptionValue] = useState('');
-  const { action } = useAction();
-  // const date = new Date();
   const [imageValue, setImageValue] = useState('');
   const [videoValue, setVideoValue] = useState('');
   const [fileType, setFileType] = useState('');

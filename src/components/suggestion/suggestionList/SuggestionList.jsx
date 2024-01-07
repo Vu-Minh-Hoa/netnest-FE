@@ -6,7 +6,7 @@ import { post } from '../../../services/request';
 import { API_LIST } from '../../../contants/common';
 import { useSelector } from 'react-redux';
 
-const SuggestionList = ({ listItem }) => {
+const SuggestionList = ({ listItem = {} }) => {
   return (
     <div className='list-item'>
       {listItem?.map((item) => (

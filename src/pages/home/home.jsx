@@ -98,8 +98,8 @@ const HomePage = () => {
     return (
       <div className='homePage-suggestion'>
         <div className='homePage-suggestion-content'>
-          <FollowedList listUser={followingData} />
-          <PostList postList={postData} />
+          <FollowedList listUser={followingData || []} />
+          <PostList postList={postData || []} />
         </div>
       </div>
     );
