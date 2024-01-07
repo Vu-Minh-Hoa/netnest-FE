@@ -26,10 +26,26 @@
   display: none;
 }
 
+.cs-conversation-header__user-name {
+  font-size: 16px;
+}
+
+.scrollbar-container {
+  .cs-conversation-header {
+    border: none !important;
+  }
+}
+
 .cs-conversation-header {
   border: none !important;
   font-size: 20px;
   font-weight: bold;
+  border-bottom: solid 1px #ccc !important;
+  background-color: #fff !important;
+
+  .cs-conversation-header__user-name {
+    background-color: #fff;
+  }
 }
 
 .main-content {

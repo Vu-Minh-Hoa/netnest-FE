@@ -24,10 +24,7 @@ import {
 } from '../../data/data';
 import { Chat } from '../../components/chat/MainChat';
 import './chat.scss';
-// sendMessage and addMessage methods can automagically generate id for messages and groups
-// This allows you to omit doing this manually, but you need to provide a message generator
-// The message id generator is a function that receives message and returns id for this message
-// The group id generator is a function that returns string
+
 const messageIdGenerator = (message) => nanoid();
 const groupIdGenerator = () => nanoid();
 
@@ -55,64 +52,10 @@ const ChatPage = () => {
                 autoDraft: AutoDraft.Save | AutoDraft.Restore,
               }}
             >
-              <ChatProvider
-                serviceFactory={serviceFactory}
-                storage={eliotStorage}
-                config={{
-                  typingThrottleTime: 250,
-                  typingDebounceTime: 900,
-                  debounceTyping: true,
-                  autoDraft: AutoDraft.Save | AutoDraft.Restore,
-                }}
-              />
-              <Chat user={akane} user2={eliot} />
+              <Chat user={akane} />
             </ChatProvider>
           </Col>
-          {/* <Col>
-            <ChatProvider
-              serviceFactory={serviceFactory}
-              storage={eliotStorage}
-              config={{
-                typingThrottleTime: 250,
-                typingDebounceTime: 900,
-                debounceTyping: true,
-                autoDraft: AutoDraft.Save | AutoDraft.Restore,
-              }}
-            >
-              <Chat user={eliot} />
-            </ChatProvider>
-          </Col> */}
         </Row>
-        {/* <Row className='h-50 pt-2 flex-nowrap'>
-          <Col>
-            <ChatProvider
-              serviceFactory={serviceFactory}
-              storage={emilyStorage}
-              config={{
-                typingThrottleTime: 250,
-                typingDebounceTime: 900,
-                debounceTyping: true,
-                autoDraft: AutoDraft.Save | AutoDraft.Restore,
-              }}
-            >
-              <Chat user={emily} />
-            </ChatProvider>
-          </Col>
-          <Col>
-            <ChatProvider
-              serviceFactory={serviceFactory}
-              storage={joeStorage}
-              config={{
-                typingThrottleTime: 250,
-                typingDebounceTime: 900,
-                debounceTyping: true,
-                autoDraft: AutoDraft.Save | AutoDraft.Restore,
-              }}
-            >
-              <Chat user={joe} />
-            </ChatProvider>
-          </Col>
-        </Row> */}
       </Container>
     </div>
   );
@@ -134,45 +77,14 @@ const akane = new User({
   bio: '',
 });
 
-const emily = new User({
-  id: emilyModel.name,
-  presence: new Presence({ status: UserStatus.Available, description: '' }),
-  firstName: '',
-  lastName: '',
-  username: emilyModel.name,
-  email: '',
-  avatar: emilyModel.avatar,
-  bio: '',
-});
-
-const eliot = new User({
-  id: eliotModel.name,
-  presence: new Presence({ status: UserStatus.Available, description: '' }),
-  firstName: '',
-  lastName: '',
-  username: eliotModel.name,
-  email: '',
-  avatar: eliotModel.avatar,
-  bio: '',
-});
-
-const joe = new User({
-  id: joeModel.name,
-  presence: new Presence({ status: UserStatus.Available, description: '' }),
-  firstName: '',
-  lastName: '',
-  username: joeModel.name,
-  email: '',
-  avatar: joeModel.avatar,
-  bio: '',
-});
-
 const chats = [
-  { name: 'Akane', storage: akaneStorage },
-  { name: 'Eliot', storage: eliotStorage },
-  { name: 'Emily', storage: emilyStorage },
-  { name: 'Joe', storage: joeStorage },
+  { name: 'Hoa', storage: akaneStorage },
+  { name: 'Diem', storage: eliotStorage },
+  { name: 'Huong', storage: emilyStorage },
+  { name: 'Hung', storage: joeStorage },
 ];
+
+// console.log(chats);
 
 function createConversation(id, name) {
   return new Conversation({
@@ -198,14 +110,9 @@ chats.forEach((c) => {
           id: u.name,
           presence: new Presence({
             status: UserStatus.Available,
-            description: '',
           }),
-          firstName: '',
-          lastName: '',
           username: u.name,
-          email: '',
           avatar: u.avatar,
-          bio: '',
         }),
       );
 

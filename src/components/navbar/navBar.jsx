@@ -55,6 +55,10 @@ const NavBar = ({ onResizeNavBar }) => {
     const active = navBarItemList?.querySelector('.active');
     const navBarHome = navBarItemList?.querySelector('.navBar-item-home');
 
+    if (`/${currentPath}` === CHAT_LINK) {
+      setIsSmallTab(true);
+    }
+
     if (active) {
       active.classList.remove('active');
     }

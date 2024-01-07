@@ -26,8 +26,6 @@ const Post = ({ postInfo, onClick }) => {
   const { token } = useSelector((store) => store.user);
   const commentRef = useRef(null);
 
-  console.log(base64Image?.[0]);
-
   const handleComment = (e) => {
     if (!e) return;
     setCommentValue(e.target.innerText);

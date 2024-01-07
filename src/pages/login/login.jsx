@@ -49,7 +49,7 @@ const LoginPage = () => {
         if (!token) return;
         dispatch(setToken(token));
         localStorage.setItem('token', token);
-        pushRoute('/');
+        pushRoute('/home');
       },
       onError: async () => {
         setErrorText('Username hoặc mật khẩu không đúng');

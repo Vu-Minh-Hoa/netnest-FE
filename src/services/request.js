@@ -10,8 +10,7 @@ const initRequest = () => {
 
   const axios = axiosBase.create({
     // baseURL: 'http://192.168.1.236:8080',
-    baseURL:
-      'https://7e31-2405-4802-1d66-29f0-d475-39a3-602-a320.ngrok-free.app',
+    baseURL: 'http://192.168.0.127:8080',
     headers,
     // withCredentials: true,
   });

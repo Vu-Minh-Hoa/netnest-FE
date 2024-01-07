@@ -23,9 +23,10 @@ import {
   MessageStatus,
 } from '@chatscope/use-chat';
 import SearchChat from '../../assets/svg/searchChat';
+import './MainChat.scss';
 // import { MessageContent, TextContent, User } from '@chatscope/use-chat';
 
-export const Chat = ({ user, user2 }) => {
+export const Chat = ({ user }) => {
   // Get all chat related values and methods from useChat hook
   const {
     currentMessages,
@@ -126,7 +127,10 @@ export const Chat = ({ user, user2 }) => {
     <MainContainer style={{ border: 'none' }} responsive>
       <Sidebar position='left' scrollable>
         <ConversationHeader
-          style={{ backgroundColor: '#fff', padding: '36px 24px 12px' }}
+          style={{
+            backgroundColor: '#fff',
+            padding: '36px 0.6em 12px',
+          }}
         >
           <ConversationHeader.Content
             style={{
@@ -139,6 +143,11 @@ export const Chat = ({ user, user2 }) => {
             <SearchChat />
           </ConversationHeader.Content>
         </ConversationHeader>
+
+        <div className='chat-title-container'>
+          <span>Message</span>
+        </div>
+
         <ConversationList>
           {conversations.map((c) => {
             // Helper for getting the data of the first participant
@@ -160,7 +169,8 @@ export const Chat = ({ user, user2 }) => {
               <Conversation
                 key={c.id}
                 name={name}
-                info={'Last seen 3 hours ago'}
+                lastActivityTime={'2m'}
+                info={'hallo !'}
                 active={activeConversation?.id === c.id}
                 unreadCnt={c.unreadCounter}
                 onClick={() => setActiveConversation(c.id)}
