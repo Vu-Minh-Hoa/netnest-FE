@@ -169,7 +169,6 @@ export const Chat = ({ user }) => {
               <Conversation
                 key={c.id}
                 name={name}
-                lastActivityTime={'2m'}
                 info={'hallo !'}
                 active={activeConversation?.id === c.id}
                 unreadCnt={c.unreadCounter}

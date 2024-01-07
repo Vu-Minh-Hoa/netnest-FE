@@ -13,6 +13,8 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const {
     comments = [],
     countLike = 0,
+    content,
+    createBy,
     base64Image,
     base64Video,
   } = viewPostInfo || {};
@@ -119,6 +121,24 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
               </div>
               <div className='view-post__comment-section__comment__wrapper'>
                 <ul className='view-post__comment-section__comments'>
+                  <li className='view-post__user-info view-post__comment-section__comment view-post__comment-section__comment__user'>
+                    <div className='view-post__comment-section__comment__user-img__wrapper'>
+                      <div className='view-post__user-img view-post__comment-section__comment__user-img'>
+                        <img
+                          src={`data:image;base64, ${createBy.base64Image}`}
+                          alt=''
+                        />
+                      </div>
+                    </div>
+                    <div className='view-post__comment-section__user-info'>
+                      <p className='view-post__user-comment view-post__comment-section__comment__text'>
+                        <span className='view-post__user-name'>
+                          {createBy.userName}&nbsp;
+                        </span>
+                        {content}
+                      </p>
+                    </div>
+                  </li>
                   {comments.length > 0 &&
                     comments.map((commentsItem, key) => {
                       return (
