@@ -80,7 +80,7 @@ const HomePage = () => {
           config: { headers: { authorization: 'Bearer ' + token } },
         }),
       onSuccess: async (data) => {
-        setFollowingData(data.length);
+        setFollowingData(data);
       },
     });
   };
