@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import Button from '../../components/common/button/button';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import './login.scss';
+import React, { useEffect, useState } from 'react';
+import { FadingBalls } from 'react-cssfx-loading';
+import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { setToken } from '../../slice/userSlice';
+import * as yup from 'yup';
+import Button from '../../components/common/button/button';
+import { API_LIST } from '../../contants/common';
+import { useAction } from '../../hooks/useAction';
 import { useRouter } from '../../hooks/useRouter';
 import { post } from '../../services/request';
-import { useAction } from '../../hooks/useAction';
-import { API_LIST } from '../../contants/common';
-import CloseSvg from '../../assets/svg/closeSvg';
+import { setToken } from '../../slice/userSlice';
+import './login.scss';
 
 const schema = yup.object({
   email: yup.string().required('Email is required!').email('Invalid email!'),
@@ -26,6 +26,7 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const [autToken, setAutToken] = useState(localStorage.getItem('token') || '');
+  const [isLoading, setIsLoading] = useState();
   const dispatch = useDispatch();
   const { pushRoute } = useRouter();
 
@@ -39,6 +40,7 @@ const LoginPage = () => {
   }, []);
 
   const onSubmitForm = async (data) => {
+    setIsLoading(true);
     await action({
       action: async () =>
         await post({
@@ -55,6 +57,7 @@ const LoginPage = () => {
         setErrorText('Username hoặc mật khẩu không đúng');
       },
     });
+    setIsLoading(false);
   };
 
   return (
@@ -78,7 +81,13 @@ const LoginPage = () => {
           {...register('password')}
         />
         <p className='login-errText'>{errors.password?.message}</p>
-        <Button btnType='submit' text='Login' className='login-button' />
+        <Button
+          isLoading={isLoading}
+          btnType='submit'
+          text='Login'
+          className='login-button'
+        />
+
         <a href='/register' className='login-dontHave'>
           Don't have an account?
         </a>

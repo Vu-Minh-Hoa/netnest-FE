@@ -1,24 +1,32 @@
 .button {
-  display: inline-block;
+  display: flex;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
   color: #fff;
   background-color: #409eff;
   border: none;
-  -webkit-appearance: none;
-  text-align: center;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
   margin: 0;
   transition: all linear 0.1s;
   outline: none;
   font-weight: 500;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
   padding: 12px 20px;
   font-size: 14px;
   border-radius: 4px;
+  -webkit-appearance: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+  .btn-loading {
+    min-height: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   &:focus {
     outline: none;

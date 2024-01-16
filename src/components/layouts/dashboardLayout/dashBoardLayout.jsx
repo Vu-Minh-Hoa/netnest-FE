@@ -1,17 +1,17 @@
-import { Route, Routes } from 'react-router-dom';
-import { CHAT_LINK, HOME_LINK, PROFILE_LINK } from '../../../links/link';
-import ProfilePage from '../../../pages/profile';
-import NavBar from '../../navbar/navBar';
-import './dashBoardLayout.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { useAction } from '../../../hooks/useAction';
-import { API_LIST } from '../../../contants/common';
-import { setUserDetail } from '../../../slice/userSlice';
-import { get } from '../../../services/request';
+import classNames from 'classnames';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Routes } from 'react-router-dom';
+import { API_LIST } from '../../../contants/common';
+import { useAction } from '../../../hooks/useAction';
+import { CHAT_LINK, HOME_LINK, PROFILE_LINK } from '../../../links/link';
 import ChatPage from '../../../pages/chat/chat';
 import HomePage from '../../../pages/home/home';
-import classNames from 'classnames';
+import ProfilePage from '../../../pages/profile';
+import { get } from '../../../services/request';
+import { setUserDetail } from '../../../slice/userSlice';
+import NavBar from '../../navbar/navBar';
+import './dashBoardLayout.scss';
 
 const DashBoardLayout = () => {
   const dispatch = useDispatch();
@@ -46,7 +46,9 @@ const DashBoardLayout = () => {
     <div className='layout'>
       <NavBar onResizeNavBar={handleNavBarState} />
       <div
-        className={classNames('main-content', { 'small-nav': isNavBarSmall })}
+        className={classNames('main-content', {
+          'small-nav': isNavBarSmall,
+        })}
       >
         <Routes>
           <Route path={HOME_LINK} element={<HomePage />} />

@@ -36,7 +36,6 @@ const CreateModal = ({ onClose, onCreateSuccess }) => {
   //   });
   //   const parsedTime = new Date(newDate);
 
-  //   console.log(parsedTime);
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, []);
 
@@ -121,7 +120,7 @@ const CreateModal = ({ onClose, onCreateSuccess }) => {
           <div className='create-modal__header__title'>Create new post</div>
           <Button
             onClick={() => handleCaptionUpload()}
-            isDisabled={!(captionValue || previewImage || previewVideo)}
+            isDisabled={!(captionValue && (previewImage || previewVideo))}
             className={classNames('create-modal__header__share')}
             text='Share'
           />

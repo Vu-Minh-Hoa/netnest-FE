@@ -1,0 +1,138 @@
+@import '../../styles/variable.scss';
+
+.chat-modal__container {
+  background-color: #fff;
+  // padding: 0 20px;
+  width: 500px;
+  .chat-modal__title {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px 0;
+  }
+
+  .chat-modal__input {
+    display: flex;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 20px;
+
+    .chat-modal__label {
+      margin-right: 10px;
+    }
+
+    input {
+      border: none;
+      width: 100%;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .chat-modal__added-name__container {
+    padding: 5px 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    .chat-modal__added-name {
+      display: flex;
+      background-color: $BgLightBlueColor;
+      color: $blueColor;
+      font-size: 14px;
+      line-height: 24px;
+      font-weight: 600;
+      padding: 0 10px;
+      border-radius: 15px;
+      .chat-modal__close {
+        width: 16px;
+        margin-left: 10px;
+        cursor: pointer;
+        svg {
+          padding-bottom: 2px;
+        }
+      }
+    }
+  }
+
+  .chat-modal__name {
+  }
+
+  .chat-modal__searched-name {
+    height: 300px;
+    overflow-y: scroll;
+
+    .chat-modal__search__loading {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .chat-modal__search__result__none {
+      font-size: 14px;
+      color: $subFontColor;
+      padding: 0 20px;
+    }
+
+    .search__user-info-container {
+      display: flex;
+      cursor: pointer;
+
+      .search__user-info {
+        padding: 8px 20px;
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        flex: 1;
+        margin: 0;
+
+        .search__user-img {
+          height: 44px;
+          width: 44px;
+          border-radius: 100%;
+          border: 1px solid #ccc;
+          margin-right: 12px;
+
+          img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+          }
+        }
+
+        .search__user-username {
+          font-size: 14px;
+          line-height: 18px;
+          font-weight: 500;
+        }
+        .search__user-fullname {
+          font-size: 14px;
+          line-height: 18px;
+          color: $subFontColor;
+        }
+      }
+      .search__user-checkbox-container {
+        display: flex;
+        align-items: center;
+        padding-right: 20px;
+        .search__user-checkbox {
+          cursor: pointer;
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      &:hover {
+        background-color: $navBarHoverColor;
+      }
+    }
+  }
+  .chat-modal__btn-container {
+    padding: 10px 20px 20px;
+    .chat-modal__btn {
+      width: 100%;
+    }
+  }
+}

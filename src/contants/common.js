@@ -4,21 +4,38 @@ export const NAV_TAB = {
   CREATE: 'create',
 };
 
+export const CHAT_TYPE = {
+  INCOMING: 'incoming',
+  OUTGOING: 'outgoing',
+};
+
+export const DISPLAY_BASE64 = {
+  IMAGE: 'data:image; base64, ',
+  VIDEO: 'data:video; base64, ',
+};
+
 export const BASE_API = '';
 export const API_LIST = {
   post_user: '/users',
   get_search_user: '/search',
-  post_add_comment: '/post',
-  post_imgage_video: '/',
+  get_post_profile: '/profile/post',
+  get_chat_all: '/chat/all',
+  get_search_chat: '/chat/searchById',
   get_user_detail: '/UserDetail',
-  post_detail: '/postDetail',
   get_search_detail_user: '/searchDetailUser',
-  post_add_following: 'users/follow',
   get_following: '/following',
   get_followers: '/followers',
+  post_create_chat: '/chat/search',
+  post_add_comment: '/post',
+  post_like_comment: '/post/addLikeComment',
+  post_dislike_comment: '/post/dislike',
+  post_imgage_video: '/',
+  post_detail: '/postDetail',
+  post_add_following: 'users/follow',
   post_create_post: '/newPost',
   post_update_image_post: '/newImagePost',
   post_update_video_post: '/newVideoPost',
+  post_add_message: '/chat/addMess',
   login: '/authenticate',
   logout: '/logout',
   register: '/register',
@@ -26,5 +43,4 @@ export const API_LIST = {
   put_update_user: '/user/update',
   put_update_avatar: 'user/updateAvatar',
   suggest_friend: '/suggestFriend',
-  get_post_profile: '/profile/post',
 };

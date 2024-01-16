@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CloseSvg from '../../assets/svg/closeSvg';
 import HearthSvg from '../../assets/svg/hearthSvg';
@@ -8,6 +8,13 @@ import { useAction } from '../../hooks/useAction';
 import { post } from '../../services/request';
 import Dot from '../common/dot/dot';
 import './viewPost.scss';
+import { CircularProgress } from 'react-cssfx-loading';
+import Like from '../common/like/like';
+import {
+  postCommentReaction,
+  postPostReaction,
+} from '../../services/like.service';
+import PostComment from '../postComment/postComment copy';
 
 const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const {
@@ -17,13 +24,21 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
     createBy,
     base64Image,
     base64Video,
+    likeStatus,
+    postID,
   } = viewPostInfo || {};
   const commentRef = useRef();
   const [commentValue, setCommentValue] = useState('');
+  const [currentLikeAmount, setCurrentLikeAmount] = useState(countLike);
+  const [currentCommentLikeAmount, setCurrentCommentLikeAmount] = useState(0);
+  const [commentsValue, setCommentsValue] = useState(comments.reverse() || []);
+  const [isLiked, setIsLiked] = useState(likeStatus);
   const [followSuccess, setFollowSuccess] = useState('');
   const [isLoading, setIsLoading] = useState('');
+  const [isCommentLoading, setIsCommentLoading] = useState('');
   const { action } = useAction();
-  const { token } = useSelector((store) => store.user);
+  const { token, user } = useSelector((store) => store.user);
+
   // useEffect(() => {
   //   window.addEventListener('click', (e) => {
   //     e.stopPropagation();
@@ -45,12 +60,13 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
         }),
       onSuccess: async (data) => {
         setFollowSuccess(true);
-        setIsLoading(false);
       },
     });
+    setIsLoading(false);
   };
 
   const handlePostComment = async () => {
+    setIsCommentLoading(true);
     await action({
       action: async () =>
         await post({
@@ -63,11 +79,13 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
           },
         }),
       onSuccess: async (data) => {
-        await postComment(data.postID);
-        setCommentValue('');
+        setCommentsValue(data.reverse());
         commentRef.current.innerHTML = '';
+        setCommentValue('');
       },
     });
+
+    setIsCommentLoading(false);
   };
 
   const handleClose = () => {
@@ -77,6 +95,12 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const handleComment = (e) => {
     if (!e) return;
     setCommentValue(e.target.innerText);
+  };
+
+  const handlePostReaction = async () => {
+    const data = await postPostReaction({ isLiked, token, postId: postID });
+    if (Object?.keys(data)?.length) setIsLiked((prev) => !prev);
+    setCurrentLikeAmount(data.countLike);
   };
 
   return (
@@ -102,12 +126,15 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
             <div className='view-post__comment-section'>
               <div className='view-post__user-info view-post__author-info'>
                 <div className='view-post__user-img view-post__comment-section__user-img'>
-                  <img src={`data:image;base64, ${base64Image}`} alt='' />
+                  <img
+                    src={`data:image;base64, ${createBy?.base64Image}`}
+                    alt=''
+                  />
                 </div>
                 <div className='view-post__comment-section__user-name'>
-                  {viewPostInfo.createBy?.userName}
+                  {createBy?.userName}
                 </div>
-                {!followSuccess && (
+                {!(user?.userId === createBy?.userId) && !followSuccess && (
                   <>
                     <Dot />
                     <div
@@ -125,7 +152,7 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
                     <div className='view-post__comment-section__comment__user-img__wrapper'>
                       <div className='view-post__user-img view-post__comment-section__comment__user-img'>
                         <img
-                          src={`data:image;base64, ${createBy.base64Image}`}
+                          src={`data:image;base64, ${createBy?.base64Image}`}
                           alt=''
                         />
                       </div>
@@ -133,67 +160,47 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
                     <div className='view-post__comment-section__user-info'>
                       <p className='view-post__user-comment view-post__comment-section__comment__text'>
                         <span className='view-post__user-name'>
-                          {createBy.userName}&nbsp;
+                          {createBy?.userName}&nbsp;
                         </span>
                         {content}
                       </p>
                     </div>
                   </li>
-                  {comments.length > 0 &&
-                    comments.map((commentsItem, key) => {
+                  {commentsValue?.length > 0 &&
+                    commentsValue?.map((commentsItem, key) => {
                       return (
-                        <li
+                        <PostComment
+                          commentsItem={commentsItem}
                           key={key}
-                          className='view-post__user-info view-post__comment-section__comment'
-                        >
-                          <div className='view-post__comment-section__comment__user-img__wrapper'>
-                            <div className='view-post__user-img view-post__comment-section__comment__user-img'>
-                              <img
-                                src={`data:image;base64, ${commentsItem.user.base64Image}`}
-                                alt=''
-                              />
-                            </div>
-                          </div>
-                          <div className='view-post__comment-section__user-info'>
-                            <p className='view-post__user-comment view-post__comment-section__comment__text'>
-                              <span className='view-post__user-name'>
-                                {commentsItem.user.userName}&nbsp;
-                              </span>
-                              {commentsItem.comment}
-                            </p>
-                            {/* {commentsItem.user.countLike && ( */}
-                            <div className='view-post__action'>
-                              <span>
-                                {commentsItem.user.countLike || 0} likes
-                              </span>
-                            </div>
-                            {/* )} */}
-                          </div>
-                          <div className='view-post__reaction'>
-                            <div className='view-post__reaction__like'>
-                              <HearthSvg />
-                            </div>
-                          </div>
-                        </li>
+                          token={token}
+                          isLiked={isLiked}
+                        />
                       );
                     })}
                 </ul>
               </div>
               <div className='view-post__reaction-timestamp'>
                 <div className='view-post__reaction'>
-                  <div className='view-post__reaction__like'>
-                    <HearthSvg />
-                  </div>
+                  <Like onClick={handlePostReaction} isLiked={isLiked} />
                 </div>
-                <div className='view-post__like'> {countLike || 0} likes </div>
+                <div className='view-post__like'>
+                  {' '}
+                  {currentLikeAmount || 0} likes{' '}
+                </div>
                 {/* <div className='view-post__timestamp'>
                 </div> */}
               </div>
               <div className='view-post__comment'>
+                {isCommentLoading && (
+                  <div className='view-post__comment-loading'>
+                    <CircularProgress height={22} width={22} />
+                  </div>
+                )}
                 <span
                   onInput={handleComment}
                   className={classNames('view-post__comment-input', {
                     'view-post__comment-input__has-value': commentValue,
+                    'view-post__comment-input__loading': isCommentLoading,
                   })}
                   ref={commentRef}
                   contentEditable

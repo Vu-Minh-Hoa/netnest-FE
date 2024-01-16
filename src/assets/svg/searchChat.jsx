@@ -9,7 +9,6 @@ function SearchChat() {
       viewBox='0 0 24 24'
       width='24'
     >
-      <title>New message</title>
       <path
         d='M12.202 3.203H5.25a3 3 0 0 0-3 3V18.75a3 3 0 0 0 3 3h12.547a3 3 0 0 0 3-3v-6.952'
         fill='none'

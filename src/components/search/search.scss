@@ -24,6 +24,14 @@
     transform: translateX(68px);
   }
 
+  .search__loading {
+    height: 100%;
+    display: flex;
+    padding-bottom: 300px;
+    justify-content: center;
+    align-items: center;
+  }
+
   .search__input-header {
     padding-top: 8px;
 

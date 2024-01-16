@@ -1,0 +1,14 @@
+@import '../../../styles/variable.scss';
+
+.like-container {
+  margin: 8px 0;
+  cursor: pointer;
+
+  &.liked {
+    color: $redColor;
+    fill: $redColor;
+  }
+  svg {
+    width: 24px;
+  }
+}

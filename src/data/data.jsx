@@ -1,25 +1,20 @@
 import akaneAvatar from '../assets/img/img1.jpg';
 import eliotAvatar from '../assets/img/img2.jpg';
 import emilyAvatar from '../assets/img/img3.jpg';
-import joeAvatar from '../assets/img/img5.jpg';
 
-export const akaneModel = {
-  name: 'Hoa',
+export const hoaModel = {
+  name: 'Hòa',
   avatar: akaneAvatar,
 };
 
-export const eliotModel = {
-  name: 'Diem',
+export const diemModel = {
+  name: 'Diễm',
   avatar: eliotAvatar,
 };
 
-export const emilyModel = {
-  name: 'Huong',
+export const moonModel = {
+  name: 'moontb',
   avatar: emilyAvatar,
 };
 
-export const joeModel = {
-  name: 'Hung',
-  avatar: joeAvatar,
-};
-export const users = [akaneModel, eliotModel, emilyModel, joeModel];
+export const users = [hoaModel, diemModel, moonModel];

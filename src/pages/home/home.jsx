@@ -9,10 +9,12 @@ import { API_LIST } from '../../contants/common';
 import { get } from '../../services/request';
 import { useDispatch, useSelector } from 'react-redux';
 import userSlice, { setUserDetail } from '../../slice/userSlice';
+import ModalLoadingCircle from '../../components/common/loadingCircle/loadingCircle';
 
 const HomePage = () => {
   const { action, actionAll } = useAction();
   const [postData, setPostData] = useState([]);
+  const [isLoadingComponent, setIsLoadingComponent] = useState(false);
   const [followerData, setFollowerData] = useState([]);
   const [followingData, setFollowingData] = useState([]);
   const [suggestFriend, setSuggestFriend] = useState([]);
@@ -25,12 +27,14 @@ const HomePage = () => {
   }, [token]);
 
   const getData = async () => {
+    setIsLoadingComponent(true);
     await actionAll([
       getPost(),
       getFollower(),
       getFollowing(),
       getSuggestFriend(),
     ]);
+    setIsLoadingComponent(false);
   };
 
   const getPost = async () => {
@@ -38,6 +42,7 @@ const HomePage = () => {
       action: async () =>
         await get({
           url: API_LIST.home,
+          isLoading: false,
           config: { headers: { authorization: 'Bearer ' + token } },
         }),
       onSuccess: async (data) => {
@@ -51,6 +56,7 @@ const HomePage = () => {
       action: async () =>
         await get({
           url: API_LIST.suggest_friend,
+          isLoading: false,
           config: { headers: { authorization: 'Bearer ' + token } },
         }),
       onSuccess: async (data) => {
@@ -64,6 +70,7 @@ const HomePage = () => {
       action: async () =>
         await get({
           url: API_LIST.get_followers,
+          isLoading: false,
           config: { headers: { authorization: 'Bearer ' + token } },
         }),
       onSuccess: async (data) => {
@@ -77,6 +84,7 @@ const HomePage = () => {
       action: async () =>
         await get({
           url: API_LIST.get_following,
+          isLoading: false,
           config: { headers: { authorization: 'Bearer ' + token } },
         }),
       onSuccess: async (data) => {
@@ -84,8 +92,9 @@ const HomePage = () => {
       },
     });
   };
-
-  if (!followingData) {
+  if (isLoadingComponent) {
+    return <ModalLoadingCircle />;
+  } else if (!followingData.length) {
     return (
       <div className='homePage-suggestion'>
         <div className='homePage-suggestion-content'>

@@ -1,6 +1,6 @@
 import './info.scss';
 
-const Info = ({ userInfo }) => {
+const Info = ({ userInfo, countPost }) => {
   return (
     <div className='profile__container'>
       <div className='profile'>
@@ -19,7 +19,7 @@ const Info = ({ userInfo }) => {
             </div>
             <div className='line2'>
               <p>
-                <b>0</b> posts
+                <b>{countPost}</b> posts
               </p>
               <p>
                 <b>{userInfo.countfollowers}</b> followers
@@ -29,7 +29,7 @@ const Info = ({ userInfo }) => {
               </p>
             </div>
             <h2 className='username' style={{ marginTop: '0 0 15px' }}>
-              Vu minh Hoa
+              {userInfo.fullName}
             </h2>
             {/* <p>
               Co <b>_hanguyen</b> và 6 người khác theo dõi

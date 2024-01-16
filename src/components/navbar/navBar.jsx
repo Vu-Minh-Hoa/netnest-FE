@@ -23,15 +23,15 @@ const NavBar = ({ onResizeNavBar }) => {
   const [isSmallTab, setIsSmallTab] = useState(false);
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
   const [isSearchBarActive, setIsSearchBarActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchedUsers, setSearchedUser] = useState([]);
   const [recentSearchedUser, setRecentSearchedUser] = useState([]);
   const [isNotificationBarActive, setIsNotificationBarActive] = useState(false);
-  const { token } = useSelector((store) => store.user);
+  const { token, user } = useSelector((store) => store.user);
   const { action } = useAction();
   const { pushRoute } = useRouter();
   const location = useLocation();
   const currentPath = location.pathname.split('/')[1];
-
   useEffect(() => {
     onResizeNavBar && onResizeNavBar(isSmallTab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,7 +43,8 @@ const NavBar = ({ onResizeNavBar }) => {
   }, [currentPath, isSearchBarActive]);
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.setItem('token', '');
+    //localStorage.clear();
     window.location.reload();
   };
 
@@ -87,6 +88,8 @@ const NavBar = ({ onResizeNavBar }) => {
   };
 
   const handleSearchBar = async (value) => {
+    if (!value.length) return;
+    setIsLoading(true);
     await action({
       action: async () =>
         await get({
@@ -99,6 +102,7 @@ const NavBar = ({ onResizeNavBar }) => {
         setSearchedUser(data);
       },
     });
+    setIsLoading(false);
   };
 
   const handleOpenCreateModal = () => {
@@ -179,7 +183,7 @@ const NavBar = ({ onResizeNavBar }) => {
             }}
             className='navBar-item navBar-item-profile'
           >
-            <img src={defaultUser} alt='' />
+            <img src={`data:image;base64,${user.base64Image}`} alt='' />
             <span className='navBar-item-desc'>Profile</span>
           </li>
         </ul>
@@ -193,6 +197,7 @@ const NavBar = ({ onResizeNavBar }) => {
         isActive={isSearchBarActive}
         onChange={handleSearchBar}
         searchedUsers={searchedUsers}
+        isLoading={isLoading}
       />
 
       {isOpenCreateModal && (

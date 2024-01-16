@@ -1,14 +1,15 @@
-import { isDisabled } from '@testing-library/user-event/dist/utils';
-import './button.scss';
 import classNames from 'classnames';
+import { FadingBalls } from 'react-cssfx-loading';
+import './button.scss';
 
 function Button({
-  text = 'Text',
   className = '',
+  text = '',
   btnType = 'button',
   onClick,
   isDisabled = false,
-  chidren,
+  isLoading = false,
+  children,
 }) {
   return (
     <button
@@ -17,8 +18,16 @@ function Button({
       type={btnType}
       className={classNames('button', { disabled: isDisabled }, className)}
     >
-      {text}
-      {chidren}
+      {isLoading ? (
+        <div className='btn-loading'>
+          <FadingBalls width='40px' height='10px' color='#fff' />
+        </div>
+      ) : (
+        <>
+          {text}
+          {children}
+        </>
+      )}
     </button>
   );
 }

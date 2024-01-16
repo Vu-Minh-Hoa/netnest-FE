@@ -1,151 +1,174 @@
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
-import {
-  BasicStorage,
-  ChatProvider,
-  Conversation,
-  ConversationRole,
-  Participant,
-  Presence,
-  TypingUsersList,
-  User,
-  UserStatus,
-} from '@chatscope/use-chat';
-import { AutoDraft } from '@chatscope/use-chat/dist/enums/AutoDraft';
-import { ExampleChatService } from '@chatscope/use-chat/dist/examples';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { nanoid } from 'nanoid';
+import { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import {
-  akaneModel,
-  eliotModel,
-  emilyModel,
-  joeModel,
-  users,
-} from '../../data/data';
+import { useSelector } from 'react-redux';
 import { Chat } from '../../components/chat/MainChat';
+import ChatModal from '../../components/chatModal/chatModal';
+import ModalLoadingCircle from '../../components/common/loadingCircle/loadingCircle';
+import { API_LIST } from '../../contants/common';
+import { useAction } from '../../hooks/useAction';
+import { get, post } from '../../services/request';
 import './chat.scss';
 
-const messageIdGenerator = (message) => nanoid();
-const groupIdGenerator = () => nanoid();
-
-const akaneStorage = new BasicStorage({ groupIdGenerator, messageIdGenerator });
-const eliotStorage = new BasicStorage({ groupIdGenerator, messageIdGenerator });
-const emilyStorage = new BasicStorage({ groupIdGenerator, messageIdGenerator });
-const joeStorage = new BasicStorage({ groupIdGenerator, messageIdGenerator });
-
 const ChatPage = () => {
+  const [messageData, setMessageData] = useState();
+  const [currentConversationUserOther, setCurrentConversationUserOther] =
+    useState([]);
+  const [conversationUserInfo, setConversationUserInfo] = useState();
+  const [conversationData, setConversationData] = useState();
+  const [isConversationLoading, setIsConversationLoading] = useState(false);
+  const [isAddNewChat, setIsAddNewChat] = useState(false);
+  const [isChatPageLoading, setIsChatPageLoading] = useState(false);
+  const [chatData, setChatdata] = useState();
+  const { token, user } = useSelector((store) => store.user);
+  const { action, actionAll } = useAction();
+
+  useEffect(() => {
+    if (!token) return;
+    getChatData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const getChatData = async () => {
+    await actionAll([getChatAll()]);
+  };
+
+  const getChatAll = async () => {
+    if (!conversationData) setIsChatPageLoading(true);
+
+    await action({
+      action: async () =>
+        await get({
+          url: `${API_LIST.get_chat_all}`,
+          config: {
+            headers: {
+              authorization: 'Bearer ' + token,
+            },
+          },
+        }),
+      onSuccess: async (data) => {
+        setChatdata(data);
+      },
+    });
+    if (!conversationData) setIsChatPageLoading(false);
+  };
+
+  const getConversationData = async (chatIdNew, chatIdOld = 0) => {
+    setIsConversationLoading(true);
+    resetData();
+    await action({
+      action: async () =>
+        await get({
+          url: `${API_LIST.get_search_chat}`,
+          config: {
+            headers: {
+              authorization: 'Bearer ' + token,
+            },
+            params: {
+              chatIdNew,
+              chatIdOld,
+            },
+          },
+        }),
+      onSuccess: async (data) => {
+        setConversationData(data);
+        setConversationUserInfo(data.userOther);
+        setMessageData(data.message);
+      },
+    });
+    setIsConversationLoading(false);
+  };
+
+  const handleGetConversation = (chatIdNew, chatIdOld) => {
+    getConversationData(chatIdNew, chatIdOld);
+  };
+
+  const handleSendMessage = async (chatID, value) => {
+    setIsConversationLoading(true);
+    await action({
+      action: async () =>
+        await post({
+          url: `${API_LIST.post_add_message}`,
+          config: {
+            headers: {
+              authorization: 'Bearer ' + token,
+            },
+          },
+          data: {
+            chatID,
+            message: value,
+          },
+        }),
+      onSuccess: async (data) => {
+        await getChatAll();
+        setMessageData(data);
+      },
+    });
+    setIsConversationLoading(false);
+    setIsConversationLoading(false);
+  };
+
+  const handleCreateChat = (data) => {
+    const newUserOther = data.userOther.filter(
+      (item) => item.userId !== user.userId,
+    );
+    setConversationData(data);
+    setMessageData(data.message);
+    setCurrentConversationUserOther(newUserOther);
+    setConversationUserInfo(data.userOther);
+    setIsAddNewChat(false);
+  };
+
+  const handleOpenAddNewChat = () => {
+    setIsAddNewChat(true);
+  };
+
+  const handleCloseAddNewChat = () => {
+    setIsAddNewChat(false);
+  };
+
+  const resetData = () => {
+    setMessageData('');
+  };
+
   return (
-    <div className='h-100 d-flex flex-column overflow-hidden'>
-      <Container
-        fluid
-        className='flex-grow-1 position-relative overflow-hidden chat-page-container'
-      >
-        <Row className='h-50 pb-2 flex-nowrap chat-page-chat'>
-          <Col>
-            <ChatProvider
-              serviceFactory={serviceFactory}
-              storage={akaneStorage}
-              config={{
-                typingThrottleTime: 250,
-                typingDebounceTime: 900,
-                debounceTyping: true,
-                autoDraft: AutoDraft.Save | AutoDraft.Restore,
-              }}
-            >
-              <Chat user={akane} />
-            </ChatProvider>
-          </Col>
-        </Row>
-      </Container>
-    </div>
+    <>
+      {isAddNewChat && (
+        <ChatModal
+          onCreateChat={handleCreateChat}
+          onClose={handleCloseAddNewChat}
+        />
+      )}
+      {isChatPageLoading ? (
+        <ModalLoadingCircle />
+      ) : (
+        <div className='h-100 d-flex flex-column overflow-hidden'>
+          <Container
+            fluid
+            className='flex-grow-1 position-relative overflow-hidden chat-page-container'
+          >
+            <Row className='h-50 pb-2 flex-nowrap chat-page-chat'>
+              <Col>
+                <Chat
+                  user={user}
+                  chatData={chatData}
+                  onSendMessage={handleSendMessage}
+                  conversationUserOther={currentConversationUserOther}
+                  onAddNewChat={handleOpenAddNewChat}
+                  isConversationLoading={isConversationLoading}
+                  messageData={messageData}
+                  conversationData={conversationData}
+                  conversationUserInfo={conversationUserInfo}
+                  onClickConversation={handleGetConversation}
+                />
+              </Col>
+            </Row>
+          </Container>
+        </div>
+      )}
+    </>
   );
 };
-
-// Create serviceFactory
-const serviceFactory = (storage, updateState) => {
-  return new ExampleChatService(storage, updateState);
-};
-
-const akane = new User({
-  id: akaneModel.name,
-  presence: new Presence({ status: UserStatus.Available, description: '' }),
-  firstName: '',
-  lastName: '',
-  username: akaneModel.name,
-  email: '',
-  avatar: akaneModel.avatar,
-  bio: '',
-});
-
-const chats = [
-  { name: 'Hoa', storage: akaneStorage },
-  { name: 'Diem', storage: eliotStorage },
-  { name: 'Huong', storage: emilyStorage },
-  { name: 'Hung', storage: joeStorage },
-];
-
-// console.log(chats);
-
-function createConversation(id, name) {
-  return new Conversation({
-    id,
-    participants: [
-      new Participant({
-        id: name,
-        role: new ConversationRole([]),
-      }),
-    ],
-    unreadCounter: 0,
-    typingUsers: new TypingUsersList({ items: [] }),
-    draft: '',
-  });
-}
-
-// Add users and conversations to the states
-chats.forEach((c) => {
-  users.forEach((u) => {
-    if (u.name !== c.name) {
-      c.storage.addUser(
-        new User({
-          id: u.name,
-          presence: new Presence({
-            status: UserStatus.Available,
-          }),
-          username: u.name,
-          avatar: u.avatar,
-        }),
-      );
-
-      const conversationId = nanoid();
-
-      const myConversation = c.storage
-        .getState()
-        .conversations.find(
-          (cv) =>
-            typeof cv.participants.find((p) => p.id === u.name) !== 'undefined',
-        );
-      if (!myConversation) {
-        c.storage.addConversation(createConversation(conversationId, u.name));
-
-        const chat = chats.find((chat) => chat.name === u.name);
-
-        if (chat) {
-          const hisConversation = chat.storage
-            .getState()
-            .conversations.find(
-              (cv) =>
-                typeof cv.participants.find((p) => p.id === c.name) !==
-                'undefined',
-            );
-          if (!hisConversation) {
-            chat.storage.addConversation(
-              createConversation(conversationId, c.name),
-            );
-          }
-        }
-      }
-    }
-  });
-});
 
 export default ChatPage;

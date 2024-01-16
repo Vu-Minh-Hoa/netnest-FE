@@ -134,8 +134,12 @@
 
             .view-post__reaction {
               .view-post__reaction__like {
-                width: 15px;
-                height: 15px;
+                margin-bottom: 8px;
+                margin-left: 5px;
+                svg {
+                  height: 15px !important;
+                  width: 15px !important;
+                }
               }
             }
           }
@@ -153,15 +157,8 @@
           .view-post__comment-section__comment__text {
             word-break: break-word;
             line-height: 16px;
+            margin-bottom: 0;
           }
-        }
-      }
-
-      .view-post__reaction {
-        margin-bottom: 8px;
-        .view-post__reaction__like {
-          width: 24px;
-          height: 24px;
         }
       }
 
@@ -184,6 +181,16 @@
         align-items: center;
         margin: 6px 16px;
         min-height: 40px;
+        position: relative;
+
+        .view-post__comment-loading {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
 
         .view-post__comment-input {
           display: block;
@@ -203,6 +210,9 @@
 
           &.view-post__comment-input__has-value {
             overflow-y: scroll;
+          }
+          &.view-post__comment-input__loading {
+            color: #9b9b9b;
           }
         }
 

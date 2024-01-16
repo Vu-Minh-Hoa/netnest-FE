@@ -1,4 +1,7 @@
 import axiosBase from 'axios';
+import exp from 'constants';
+
+const baseUrl = 'http://192.168.1.237:8080';
 
 const initRequest = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -9,8 +12,8 @@ const initRequest = () => {
   };
 
   const axios = axiosBase.create({
-    baseURL: 'http://192.168.1.236:8080',
-    // baseURL: 'http://192.168.0.127:8080',
+    // baseURL: 'http://172.20.10.2:8080',
+    baseURL: baseUrl,
     headers,
     // withCredentials: true,
   });
@@ -63,7 +66,7 @@ const request = async (callback, reqOption) => {
     const genUrl = generateUrl(url, params);
     const axios = initRequest();
     const response = await callback(axios, genUrl);
-    return response.data;
+    return response?.data;
   } catch (error) {
     console.warn('▼Api Error▼', error);
     // return undefined;
@@ -107,6 +110,17 @@ export const upload = async (reqOption) => {
       },
     });
   }, reqOption);
+};
+
+export const deleteFormData = async (reqOption) => {
+  return await axiosBase.delete(baseUrl + reqOption.url, {
+    data: reqOption.data,
+    headers: {
+      ...reqOption.config?.headers,
+      'Content-Type': 'multipart/form-data',
+    },
+    ...reqOption.config,
+  });
 };
 
 export const putFormData = async (reqOption) => {

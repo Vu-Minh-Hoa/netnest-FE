@@ -6,6 +6,7 @@ import { get } from '../../services/request';
 import Post from '../post/post';
 import ViewPost from '../viewPost/viewPost';
 import './postList.scss';
+import ModalLoadingCircle from '../common/loadingCircle/loadingCircle';
 
 const PostList = ({ postList = [] }) => {
   const [isClickPost, setIsClickPost] = useState(false);
@@ -15,7 +16,10 @@ const PostList = ({ postList = [] }) => {
   const { action } = useAction();
 
   useEffect(() => {
-    if (!isClickPost) return;
+    console.log(!!viewPostData);
+    if (isClickPost) return;
+
+    setViewPostData('');
   }, [isClickPost]);
 
   useEffect(() => {
@@ -42,13 +46,14 @@ const PostList = ({ postList = [] }) => {
     });
   };
 
-  const handlePostCommenRecallPostDetail = (postId) => {
-    setPostedComment(postId);
+  const handlePostComment = async (postId) => {
+    await getPostDetail(postId);
+    setIsClickPost(true);
   };
 
-  const handleClickPost = (postId) => {
-    getPostDetail(postId);
+  const handleClickPost = async (postId) => {
     setIsClickPost(true);
+    await getPostDetail(postId);
   };
 
   const handleClosePost = () => {
@@ -58,18 +63,20 @@ const PostList = ({ postList = [] }) => {
 
   return (
     <>
-      {isClickPost && (
-        <ViewPost
-          postedComment={handlePostCommenRecallPostDetail}
-          viewPostInfo={viewPostData}
-          onClose={handleClosePost}
-        />
+      {isClickPost && !viewPostData && <ModalLoadingCircle />}
+      {isClickPost && viewPostData && (
+        <ViewPost viewPostInfo={viewPostData} onClose={handleClosePost} />
       )}
       <div className='post-list__container'>
         <div className='post-list__suggest-post'>
           {postList.map((postInfo, key) => {
             return (
-              <Post onClick={handleClickPost} key={key} postInfo={postInfo} />
+              <Post
+                onClick={handleClickPost}
+                key={key}
+                onPostComment={handlePostComment}
+                postInfo={postInfo}
+              />
             );
           })}
         </div>

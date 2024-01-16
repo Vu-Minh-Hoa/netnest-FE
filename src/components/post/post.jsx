@@ -1,15 +1,18 @@
-import './post.scss';
-import defaultUserImg from '../../assets/img/user.jpg';
-import { useRef, useState } from 'react';
-import Dot from '../common/dot/dot';
 import classNames from 'classnames';
-import HearthSvg from '../../assets/svg/hearthSvg';
-import { useAction } from '../../hooks/useAction';
-import { post } from '../../services/request';
-import { API_LIST } from '../../contants/common';
+import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import CommentSvg from '../../assets/svg/commentSvg';
+import HearthSolidSvg from '../../assets/svg/hearthSolidSvg';
+import HearthSvg from '../../assets/svg/hearthSvg';
+import { API_LIST } from '../../contants/common';
+import { useAction } from '../../hooks/useAction';
+import { postPostReaction } from '../../services/like.service';
+import { post } from '../../services/request';
+import Dot from '../common/dot/dot';
+import './post.scss';
+import Like from '../common/like/like';
 
-const Post = ({ postInfo, onClick }) => {
+const Post = ({ postInfo, onClick, onPostComment }) => {
   const {
     postID,
     username,
@@ -19,13 +22,15 @@ const Post = ({ postInfo, onClick }) => {
     base64video = '',
     createBy,
     base64Image = '',
+    likeStatus,
+    followStatus = false,
   } = postInfo;
   const [commentValue, setCommentValue] = useState('');
-  const [isLiked, setIsLiked] = useState('');
+  const [currentLikeAmount, setCurrentLikeAmount] = useState(countLike);
+  const [isLiked, setIsLiked] = useState(likeStatus);
   const { action } = useAction();
   const { token } = useSelector((store) => store.user);
   const commentRef = useRef(null);
-
   const handleComment = (e) => {
     if (!e) return;
     setCommentValue(e.target.innerText);
@@ -50,8 +55,15 @@ const Post = ({ postInfo, onClick }) => {
       onSuccess: async (data) => {
         setCommentValue('');
         commentRef.current.innerHTML = '';
+        onPostComment && onPostComment(postID);
       },
     });
+  };
+
+  const handlePostReaction = async () => {
+    const data = await postPostReaction({ isLiked, token, postId: postID });
+    if (Object?.keys(data)?.length) setIsLiked((prev) => !prev);
+    setCurrentLikeAmount(data.countLike);
   };
 
   return (
@@ -65,7 +77,7 @@ const Post = ({ postInfo, onClick }) => {
           </div>
           <span className='post__username'>{createBy.userName}</span>
           <Dot />
-          <span className='post__follow'>Follow</span>
+          {!followStatus && <span className='post__follow'>Follow</span>}
         </div>
       </div>
       {base64Image?.[0] && (
@@ -83,16 +95,18 @@ const Post = ({ postInfo, onClick }) => {
           </video>
         </div>
       )}
-      <div
-        className={classNames('post__action', {
-          'post__action-liked': isLiked,
-        })}
-      >
-        <HearthSvg />
+      <div className='post__action__wrapper'>
+        <Like onClick={handlePostReaction} isLiked={isLiked} />
+        <div
+          className={classNames('post__action', 'post__action-comment')}
+          onClick={() => handleOnclick()}
+        >
+          <CommentSvg />
+        </div>
       </div>
-      {countLike ? (
+      {currentLikeAmount ? (
         <div className='post__like'>
-          <span>{countLike} likes</span>
+          <span>{currentLikeAmount} likes</span>
         </div>
       ) : (
         ''

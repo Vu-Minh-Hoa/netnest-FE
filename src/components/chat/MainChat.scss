@@ -9,6 +9,49 @@
   .scrollbar-container {
     .cs-conversation {
       padding: 0.675em 0.8em 0.675em 0.8em;
+      &.new-chat-conversation {
+        .cs-conversation__info-content {
+          font-weight: bold;
+          color: #333;
+        }
+      }
     }
   }
+}
+
+.center-at-two {
+  padding-top: 18px;
+}
+
+.cs-conversation > .cs-avatar,
+.cs-conversation > .cs-avatar-group {
+  margin-right: 8px;
+}
+
+.cs-conversation-header__avatar {
+  width: unset;
+  margin-right: 8px;
+}
+
+.conversations-header__search {
+  cursor: pointer;
+}
+
+.cs-message-list {
+  .conversation-loading {
+    position: absolute;
+    margin-top: 0px;
+    background: rgba(0, 0, 0, 0.3);
+    &.have-header {
+      margin-top: 66px;
+    }
+  }
+}
+
+.cs-message-list__scroll-wrapper {
+  padding: 0;
+}
+
+.message-container {
+  padding: 0 20px;
 }
