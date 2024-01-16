@@ -12,9 +12,9 @@ const SuggestionList = ({ listItem = {} }) => {
       {listItem?.map((item) => (
         <SuggestionItem
           key={item.userId}
-          img={item.base64Image}
-          username={item.userName}
-          fullname={item.fullName}
+          img={item?.base64Image}
+          username={item?.userName}
+          fullname={item?.fullName}
         />
       ))}
     </div>

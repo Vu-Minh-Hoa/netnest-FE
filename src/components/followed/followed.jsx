@@ -10,7 +10,7 @@ const FollowedList = ({ listUser = [] }) => {
               <div className='followed-user-img__wrapper'>
                 <div className='followed-user-img'>
                   <img
-                    src={`data:image/png;base64, ${user.base64Image}`}
+                    src={`data:image/png;base64, ${user?.base64Image}`}
                     alt=''
                   />
                 </div>

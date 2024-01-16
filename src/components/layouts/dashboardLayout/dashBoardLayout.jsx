@@ -52,7 +52,7 @@ const DashBoardLayout = () => {
       >
         <Routes>
           <Route path={HOME_LINK} element={<HomePage />} />
-          <Route path={PROFILE_LINK} element={<ProfilePage />} />
+          <Route path={`${PROFILE_LINK}/:username`} element={<ProfilePage />} />
           <Route path={CHAT_LINK} element={<ChatPage />} />
         </Routes>
       </div>

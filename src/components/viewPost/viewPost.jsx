@@ -15,6 +15,7 @@ import {
   postPostReaction,
 } from '../../services/like.service';
 import PostComment from '../postComment/postComment copy';
+import { convertDateTimeFormat } from '../../utils/utils';
 
 const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const {
@@ -22,6 +23,7 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
     countLike = 0,
     content,
     createBy,
+    createDate,
     base64Image,
     base64Video,
     likeStatus,
@@ -30,7 +32,7 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const commentRef = useRef();
   const [commentValue, setCommentValue] = useState('');
   const [currentLikeAmount, setCurrentLikeAmount] = useState(countLike);
-  const [currentCommentLikeAmount, setCurrentCommentLikeAmount] = useState(0);
+  const [timestamp, setTimestamp] = useState(0);
   const [commentsValue, setCommentsValue] = useState(comments.reverse() || []);
   const [isLiked, setIsLiked] = useState(likeStatus);
   const [followSuccess, setFollowSuccess] = useState('');
@@ -38,6 +40,25 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const [isCommentLoading, setIsCommentLoading] = useState('');
   const { action } = useAction();
   const { token, user } = useSelector((store) => store.user);
+
+  useEffect(() => {
+    if (!comments?.length) return;
+
+    const newData = comments
+      .map((item) => {
+        const newDateTimeFormate = convertDateTimeFormat(item.createDate);
+        return { ...item, createDate: newDateTimeFormate };
+      })
+      .reverse();
+
+    setCommentsValue(newData);
+  }, [comments]);
+
+  useEffect(() => {
+    if (!createDate) return;
+    const newDateTimeFormate = convertDateTimeFormat(createDate);
+    setTimestamp(newDateTimeFormate);
+  }, [createDate]);
 
   // useEffect(() => {
   //   window.addEventListener('click', (e) => {
@@ -79,7 +100,14 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
           },
         }),
       onSuccess: async (data) => {
-        setCommentsValue(data.reverse());
+        const newData = data
+          .map((item) => {
+            const newDateTimeFormate = convertDateTimeFormat(item.createDate);
+            return { ...item, createDate: newDateTimeFormate };
+          })
+          .reverse();
+        setCommentsValue(newData);
+        // console.log('comments: ', data.reverse());
         commentRef.current.innerHTML = '';
         setCommentValue('');
       },
@@ -187,8 +215,7 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
                   {' '}
                   {currentLikeAmount || 0} likes{' '}
                 </div>
-                {/* <div className='view-post__timestamp'>
-                </div> */}
+                <div className='view-post__timestamp'>{timestamp} ago</div>
               </div>
               <div className='view-post__comment'>
                 {isCommentLoading && (

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CommentSvg from '../../assets/svg/commentSvg';
 import HearthSolidSvg from '../../assets/svg/hearthSolidSvg';
@@ -11,6 +11,7 @@ import { post } from '../../services/request';
 import Dot from '../common/dot/dot';
 import './post.scss';
 import Like from '../common/like/like';
+import { convertDateTimeFormat } from '../../utils/utils';
 
 const Post = ({ postInfo, onClick, onPostComment }) => {
   const {
@@ -21,16 +22,23 @@ const Post = ({ postInfo, onClick, onPostComment }) => {
     countComments = 0,
     base64video = '',
     createBy,
+    createDate,
     base64Image = '',
     likeStatus,
     followStatus = false,
   } = postInfo;
   const [commentValue, setCommentValue] = useState('');
+  const [timestamp, setSimestamp] = useState('');
   const [currentLikeAmount, setCurrentLikeAmount] = useState(countLike);
   const [isLiked, setIsLiked] = useState(likeStatus);
   const { action } = useAction();
   const { token } = useSelector((store) => store.user);
   const commentRef = useRef(null);
+
+  useEffect(() => {
+    setSimestamp(convertDateTimeFormat(createDate));
+  }, [createDate]);
+
   const handleComment = (e) => {
     if (!e) return;
     setCommentValue(e.target.innerText);
@@ -77,7 +85,13 @@ const Post = ({ postInfo, onClick, onPostComment }) => {
           </div>
           <span className='post__username'>{createBy.userName}</span>
           <Dot />
-          {!followStatus && <span className='post__follow'>Follow</span>}
+          <span className='post__timestamp'>{timestamp}</span>
+          {!followStatus && (
+            <>
+              <Dot />
+              <span className='post__follow'>Follow</span>
+            </>
+          )}
         </div>
       </div>
       {base64Image?.[0] && (

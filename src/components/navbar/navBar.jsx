@@ -32,6 +32,7 @@ const NavBar = ({ onResizeNavBar }) => {
   const { pushRoute } = useRouter();
   const location = useLocation();
   const currentPath = location.pathname.split('/')[1];
+
   useEffect(() => {
     onResizeNavBar && onResizeNavBar(isSmallTab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,6 +112,13 @@ const NavBar = ({ onResizeNavBar }) => {
 
   const handleOnCloseCreateModal = () => {
     setIsOpenCreateModal(false);
+  };
+
+  const handleViewUserInfo = (username) => {
+    setIsSmallTab(false);
+    setIsSearchBarActive(false);
+    handleResizeNavBar();
+    handleRedirect(`/profile/${username}`);
   };
 
   const handleCreateSuccess = () => {};
@@ -196,6 +204,7 @@ const NavBar = ({ onResizeNavBar }) => {
         recentSearchUser={recentSearchedUser}
         isActive={isSearchBarActive}
         onChange={handleSearchBar}
+        onClickViewUserInfo={handleViewUserInfo}
         searchedUsers={searchedUsers}
         isLoading={isLoading}
       />

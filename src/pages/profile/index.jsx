@@ -8,8 +8,10 @@ import './style.scss';
 
 import ProfilePostList from '../../components/profilePostList/profilePost';
 import ModalLoadingCircle from '../../components/common/loadingCircle/loadingCircle';
+import { useLocation, useParams } from 'react-router-dom';
 
 const ProfilePage = () => {
+  const { username } = useParams();
   const [userInfo, setUserInfo] = useState({});
   const [userPost, setUserPost] = useState({});
   const [isLoadingComponent, setIsLoadingComponent] = useState(false);
@@ -18,10 +20,18 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (!token) return;
+    if (username) return;
     getData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  useEffect(() => {
+    if (!username) return;
+    handleUserDetail(username);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username]);
 
   const getData = async () => {
     setIsLoadingComponent(true);
@@ -29,11 +39,13 @@ const ProfilePage = () => {
     setIsLoadingComponent(false);
   };
 
-  const getUserDetail = async () => {
+  const getUserDetail = async (username = '') => {
+    const urlUsername = username ? `?username=${username}` : '';
+
     await action({
       action: async () =>
         await get({
-          url: API_LIST.get_user_detail,
+          url: API_LIST.get_user_detail + urlUsername,
           config: {
             headers: { authorization: 'Bearer ' + token },
           },
@@ -42,6 +54,10 @@ const ProfilePage = () => {
         setUserInfo(data);
       },
     });
+  };
+
+  const handleUserDetail = async (username) => {
+    await getUserDetail(username);
   };
 
   const getUserPost = async () => {

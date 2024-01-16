@@ -158,6 +158,9 @@
             word-break: break-word;
             line-height: 16px;
             margin-bottom: 0;
+
+            .view-post__timestamp {
+            }
           }
         }
       }
@@ -176,6 +179,7 @@
           }
         }
       }
+
       .view-post__comment {
         display: flex;
         align-items: center;
@@ -233,6 +237,12 @@
           }
         }
       }
+    }
+
+    .view-post__timestamp {
+      font-size: 12px;
+      font-weight: 400;
+      color: $timestampColor;
     }
   }
 }

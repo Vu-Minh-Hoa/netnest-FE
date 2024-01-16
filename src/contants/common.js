@@ -14,6 +14,11 @@ export const DISPLAY_BASE64 = {
   VIDEO: 'data:video; base64, ',
 };
 
+export const USER_CHAT_ACTION = {
+  SEARCH_USER_CHAT: 'SEARCH_USER_CHAT',
+  USER_ACTION: 'USER_ACTION',
+};
+
 export const BASE_API = '';
 export const API_LIST = {
   post_user: '/users',
@@ -25,6 +30,7 @@ export const API_LIST = {
   get_search_detail_user: '/searchDetailUser',
   get_following: '/following',
   get_followers: '/followers',
+  get_check_messge: '/chat/checkMess',
   post_create_chat: '/chat/search',
   post_add_comment: '/post',
   post_like_comment: '/post/addLikeComment',
@@ -43,4 +49,5 @@ export const API_LIST = {
   put_update_user: '/user/update',
   put_update_avatar: 'user/updateAvatar',
   suggest_friend: '/suggestFriend',
+  del_leave_chat: 'chat/leaveChat',
 };

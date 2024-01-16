@@ -4,16 +4,25 @@ import './search.scss';
 import ModalWrapper from '../common/modalWrapper/modalWrapper';
 import ModalLoadingCircle from '../common/loadingCircle/loadingCircle';
 import { CircularProgress, FadingBalls } from 'react-cssfx-loading';
+import { useRouter } from '../../hooks/useRouter';
 
 const SearchBar = ({
   recentSearchUser,
   searchedUsers,
   isActive,
   onChange,
+  onClickViewUserInfo,
   isLoading,
 }) => {
+  const { pushRoute } = useRouter();
+
   const handleOnchange = (value) => {
     onChange && onChange(value);
+  };
+
+  const handleViewUserInfo = (username) => {
+    onClickViewUserInfo && onClickViewUserInfo(username);
+    // pushRoute(`/profile/#/?username=${username}`);
   };
 
   return (
@@ -42,11 +51,15 @@ const SearchBar = ({
               <div className='search__result'>
                 {searchedUsers.map((item, key) => {
                   return (
-                    <div key={key} className='search__result__list'>
+                    <div
+                      key={key}
+                      className='search__result__list'
+                      onClick={() => handleViewUserInfo(item.userName)}
+                    >
                       <SearchUser
-                        userImg={item.base64Image}
-                        username={item.userName}
-                        fullname={item.fullName}
+                        userImg={item?.base64Image}
+                        username={item?.userName}
+                        fullname={item?.fullName}
                       />
                     </div>
                   );

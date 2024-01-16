@@ -16,7 +16,6 @@ const PostList = ({ postList = [] }) => {
   const { action } = useAction();
 
   useEffect(() => {
-    console.log(!!viewPostData);
     if (isClickPost) return;
 
     setViewPostData('');

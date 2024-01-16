@@ -5,6 +5,7 @@ import {
   Conversation,
   ConversationHeader,
   ConversationList,
+  EllipsisButton,
   MainContainer,
   Message,
   MessageGroup,
@@ -19,7 +20,6 @@ import SearchChat from '../../assets/svg/searchChat';
 import { CHAT_TYPE, DISPLAY_BASE64 } from '../../contants/common';
 import ModalLoadingCircle from '../common/loadingCircle/loadingCircle';
 import './MainChat.scss';
-import { createLanguageService } from 'typescript';
 
 export const Chat = ({
   user,
@@ -32,6 +32,7 @@ export const Chat = ({
   onAddNewChat,
   isConversationLoading,
   conversationUserInfo,
+  onClickChatAction,
 }) => {
   const [currentConversationUserOther, setCurrentConversationUserOther] =
     useState();
@@ -41,7 +42,7 @@ export const Chat = ({
   useEffect(() => {
     if (conversationUserOther.length) {
       const newChatName =
-        conversationUserOther.length > 1
+        conversationUserOther?.chatName || conversationUserOther.length > 1
           ? conversationUserOther
               .map((item) => {
                 return item?.userName;
@@ -55,6 +56,10 @@ export const Chat = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationUserOther]);
+
+  const handleChatAction = () => {
+    onClickChatAction && onClickChatAction();
+  };
 
   const handleSendMessage = (value) => {
     onSendMessage && onSendMessage(conversationData?.chatID, value);
@@ -151,11 +156,11 @@ export const Chat = ({
                         width: 'unset',
                       }}
                     >
-                      {userOthersInfo.map((userOther) => {
+                      {userOthersInfo?.map((userOther) => {
                         return (
                           <Avatar
                             key={uuidv4()}
-                            src={DISPLAY_BASE64.IMAGE + userOther.base64Image}
+                            src={DISPLAY_BASE64.IMAGE + userOther?.base64Image}
                             name={chatName}
                           />
                         );
@@ -163,7 +168,9 @@ export const Chat = ({
                     </AvatarGroup>
                   ) : (
                     <Avatar
-                      src={DISPLAY_BASE64.IMAGE + userOthersInfo[0].base64Image}
+                      src={
+                        DISPLAY_BASE64.IMAGE + userOthersInfo?.[0]?.base64Image
+                      }
                     />
                   )}
                 </Conversation>
@@ -203,6 +210,12 @@ export const Chat = ({
                 />
               )}
               <ConversationHeader.Content userName={currentConversationName} />
+              <ConversationHeader.Actions>
+                <EllipsisButton
+                  orientation='vertical'
+                  onClick={() => handleChatAction()}
+                />
+              </ConversationHeader.Actions>
             </ConversationHeader>
           )}
           {isConversationLoading && (
@@ -217,7 +230,7 @@ export const Chat = ({
               messageData?.map((messageInfo) => {
                 const userBase64Image = conversationUserInfo?.find(
                   (userInfo) => userInfo.userId === messageInfo.createById,
-                ).base64Image;
+                )?.base64Image;
 
                 const direction =
                   user.userId === messageInfo.createById

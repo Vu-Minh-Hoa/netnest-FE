@@ -129,10 +129,31 @@
       }
     }
   }
+
   .chat-modal__btn-container {
     padding: 10px 20px 20px;
     .chat-modal__btn {
       width: 100%;
+    }
+  }
+
+  .chat-modal__user-action {
+    .chat-modal__user-leave-btn {
+      color: $redColor;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .chat-modal__user-cancel-btn {
+    }
+
+    .chat-modal__user-leave-btn,
+    .chat-modal__user-cancel-btn {
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
     }
   }
 }

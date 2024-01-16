@@ -2,13 +2,19 @@ import { useState } from 'react';
 import { CircularProgress } from 'react-cssfx-loading';
 import { useSelector } from 'react-redux';
 import CloseSvg from '../../assets/svg/closeSvg';
-import { API_LIST } from '../../contants/common';
+import { API_LIST, USER_CHAT_ACTION } from '../../contants/common';
 import { useAction } from '../../hooks/useAction';
 import { get, post } from '../../services/request';
 import Button from '../common/button/button';
 import ModalWrapper from '../common/modalWrapper/modalWrapper';
 import './chatModal.scss';
-const ChatModal = ({ onClose, onCreateChat }) => {
+
+const ChatModal = ({
+  onClose,
+  onCreateChat,
+  currentUserAction,
+  onLeaveChat,
+}) => {
   const [searchedUsers, setSearchedUsers] = useState([]);
   const [addedUsers, setAddedUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +22,11 @@ const ChatModal = ({ onClose, onCreateChat }) => {
   const { token } = useSelector((state) => state.user);
   const { action } = useAction();
 
-  const handleChatModal = () => {
+  const handleLeaveChat = () => {
+    onLeaveChat && onLeaveChat();
+  };
+
+  const handleCloseChatModal = () => {
     onClose && onClose();
   };
 
@@ -75,70 +85,93 @@ const ChatModal = ({ onClose, onCreateChat }) => {
   };
 
   return (
-    <ModalWrapper onClose={handleChatModal}>
+    <ModalWrapper onClose={() => handleCloseChatModal()}>
       <div className='chat-modal__container'>
-        <div className='chat-modal__title'>Chat</div>
-        <div className='chat-modal__input'>
-          <div className='chat-modal__label'>To: </div>
-          <input
-            onChange={(e) => handleSearchUser(e.target.value)}
-            placeholder='Search...'
-            type='text'
-          />
-        </div>
-        <div className='chat-modal__added-name__container'>
-          {addedUsers?.length > 0 &&
-            addedUsers.map((userInfo, key) => (
-              <div key={key} className='chat-modal__added-name'>
-                <div className='chat-modal__name'>{userInfo.username}</div>
-                <div
-                  className='chat-modal__close '
-                  onClick={() => handleAddUser(userInfo)}
-                >
-                  <CloseSvg />
-                </div>
-              </div>
-            ))}
-        </div>
-        <div className='chat-modal__searched-name'>
-          {isLoading ? (
-            <div className='chat-modal__search__loading'>
-              <CircularProgress />
+        {currentUserAction === USER_CHAT_ACTION.SEARCH_USER_CHAT && (
+          <>
+            <div className='chat-modal__title'>Chat</div>
+            <div className='chat-modal__input'>
+              <div className='chat-modal__label'>To: </div>
+              <input
+                onChange={(e) => handleSearchUser(e.target.value)}
+                placeholder='Search...'
+                type='text'
+              />
             </div>
-          ) : searchedUsers?.length > 0 ? (
-            <div className='chat-modal__search__result-container'>
-              <div className='chat-modal__search__result'>
-                {searchedUsers?.map((item, key) => {
-                  return (
-                    <div key={key} className='chat-modal__search__result__list'>
-                      <SearchUser
-                        addedUsers={addedUsers}
-                        userId={item.userId}
-                        userImg={item.base64Image}
-                        username={item.userName}
-                        fullname={item.fullName}
-                        onCheck={handleAddUser}
-                      />
+            <div className='chat-modal__added-name__container'>
+              {addedUsers?.length > 0 &&
+                addedUsers.map((userInfo, key) => (
+                  <div key={key} className='chat-modal__added-name'>
+                    <div className='chat-modal__name'>{userInfo.username}</div>
+                    <div
+                      className='chat-modal__close '
+                      onClick={() => handleAddUser(userInfo)}
+                    >
+                      <CloseSvg />
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                ))}
             </div>
-          ) : (
-            <div className='chat-modal__search__result__none'>
-              No account found
+            <div className='chat-modal__searched-name'>
+              {isLoading ? (
+                <div className='chat-modal__search__loading'>
+                  <CircularProgress />
+                </div>
+              ) : searchedUsers?.length > 0 ? (
+                <div className='chat-modal__search__result-container'>
+                  <div className='chat-modal__search__result'>
+                    {searchedUsers?.map((item, key) => {
+                      return (
+                        <div
+                          key={key}
+                          className='chat-modal__search__result__list'
+                        >
+                          <SearchUser
+                            addedUsers={addedUsers}
+                            userId={item?.userId}
+                            userImg={item?.base64Image}
+                            username={item?.userName}
+                            fullname={item?.fullName}
+                            onCheck={handleAddUser}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <div className='chat-modal__search__result__none'>
+                  No account found
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <div className='chat-modal__btn-container'>
-          <Button
-            onClick={() => handleCreateChat()}
-            text='Chat'
-            isLoading={isCreateChatLoading}
-            className='chat-modal__btn'
-            isDisabled={!!!addedUsers.length}
-          />
-        </div>
+            <div className='chat-modal__btn-container'>
+              <Button
+                onClick={() => handleCreateChat()}
+                text='Chat'
+                isLoading={isCreateChatLoading}
+                className='chat-modal__btn'
+                isDisabled={!!!addedUsers.length}
+              />
+            </div>
+          </>
+        )}
+        {currentUserAction === USER_CHAT_ACTION.USER_ACTION && (
+          <div className='chat-modal__user-action'>
+            <div
+              className='chat-modal__user-leave-btn'
+              onClick={() => handleLeaveChat()}
+            >
+              Leave
+            </div>
+            <div
+              className='chat-modal__user-cancel-btn'
+              onClick={() => handleCloseChatModal()}
+            >
+              Cancel
+            </div>
+          </div>
+        )}
       </div>
     </ModalWrapper>
   );

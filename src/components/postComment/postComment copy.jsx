@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Like from '../common/like/like';
 import { postCommentReaction } from '../../services/like.service';
 
 const PostComment = ({ commentsItem, key, onLike, token, isLiked }) => {
-  const [likeAmount, setLikeAmount] = useState(commentsItem?.countLike);
+  const [likeAmount, setLikeAmount] = useState(0);
   const [isCommentLiked, setIsCommentLiked] = useState(isLiked);
+
+  useEffect(() => {
+    if (!commentsItem?.countLike) return;
+
+    setLikeAmount(commentsItem?.countLike);
+  }, [commentsItem]);
 
   const handleLikeComment = async () => {
     const data = await postCommentReaction({
@@ -41,11 +47,10 @@ const PostComment = ({ commentsItem, key, onLike, token, isLiked }) => {
           </span>
           {commentsItem?.comment}
         </p>
-        {/* {commentsItem?.user?.countLike && ( */}
+        <span className='view-post__timestamp'>{commentsItem?.createDate}</span>
         <div className='view-post__action'>
           <span>{likeAmount || 0} likes</span>
         </div>
-        {/* )} */}
       </div>
       <div className='view-post__reaction'>
         <Like

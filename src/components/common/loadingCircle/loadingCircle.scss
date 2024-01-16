@@ -1,3 +1,9 @@
+.modal-wrapper {
+  .loadingCircle-container {
+    z-index: 9999;
+  }
+}
+
 .loadingCircle-container {
   display: flex;
   justify-content: center;

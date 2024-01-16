@@ -13,6 +13,10 @@
       margin-bottom: 12px;
       cursor: pointer;
 
+      .post__timestamp {
+        color: $timestampColor;
+      }
+
       .post__user-img__wrapper {
         display: flex;
         align-items: center;

@@ -1,11 +1,15 @@
 import './info.scss';
 
-const Info = ({ userInfo, countPost }) => {
+const Info = ({ userInfo, countPost, onChangeAvatar }) => {
+  const handleChangeAvatar = () => {
+    onChangeAvatar && onChangeAvatar();
+  };
+
   return (
     <div className='profile__container'>
       <div className='profile'>
         <div className='profile-card'>
-          <div className='profile-picture'>
+          <div className='profile-picture' onClick={() => handleChangeAvatar()}>
             <img
               src={`data:image; base64,${userInfo.base64Image}`}
               alt='User Profile'

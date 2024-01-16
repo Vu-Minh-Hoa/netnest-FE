@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux';
 import { Chat } from '../../components/chat/MainChat';
 import ChatModal from '../../components/chatModal/chatModal';
 import ModalLoadingCircle from '../../components/common/loadingCircle/loadingCircle';
-import { API_LIST } from '../../contants/common';
+import { API_LIST, USER_CHAT_ACTION } from '../../contants/common';
 import { useAction } from '../../hooks/useAction';
-import { get, post } from '../../services/request';
+import { deleteMethod, get, post } from '../../services/request';
 import './chat.scss';
 
 const ChatPage = () => {
@@ -18,7 +18,8 @@ const ChatPage = () => {
   const [conversationUserInfo, setConversationUserInfo] = useState();
   const [conversationData, setConversationData] = useState();
   const [isConversationLoading, setIsConversationLoading] = useState(false);
-  const [isAddNewChat, setIsAddNewChat] = useState(false);
+  const [changedConversation, setChangedConversation] = useState(0);
+  const [currentUserAction, setCurrentUserAction] = useState(false);
   const [isChatPageLoading, setIsChatPageLoading] = useState(false);
   const [chatData, setChatdata] = useState();
   const { token, user } = useSelector((store) => store.user);
@@ -29,6 +30,15 @@ const ChatPage = () => {
     getChatData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  useEffect(() => {
+    const checkMessInterval = setInterval(async () => {
+      await getCheckMessge();
+    }, 5000);
+
+    return () => clearInterval(checkMessInterval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversationData]);
 
   const getChatData = async () => {
     await actionAll([getChatAll()]);
@@ -55,6 +65,7 @@ const ChatPage = () => {
   };
 
   const getConversationData = async (chatIdNew, chatIdOld = 0) => {
+    setChangedConversation(chatIdNew);
     setIsConversationLoading(true);
     resetData();
     await action({
@@ -80,8 +91,24 @@ const ChatPage = () => {
     setIsConversationLoading(false);
   };
 
-  const handleGetConversation = (chatIdNew, chatIdOld) => {
-    getConversationData(chatIdNew, chatIdOld);
+  const getCheckMessge = async () => {
+    await action({
+      action: async () =>
+        await get({
+          url: `${API_LIST.get_check_messge}`,
+          config: {
+            headers: {
+              authorization: 'Bearer ' + token,
+            },
+            params: {
+              chatId: conversationData.chatID,
+            },
+          },
+        }),
+      onSuccess: async (data) => {
+        setMessageData(data);
+      },
+    });
   };
 
   const handleSendMessage = async (chatID, value) => {
@@ -109,23 +136,56 @@ const ChatPage = () => {
     setIsConversationLoading(false);
   };
 
+  const handleLeaveChat = async () => {
+    await action({
+      action: async () =>
+        await deleteMethod({
+          url: `${API_LIST.del_leave_chat}`,
+          config: {
+            headers: {
+              authorization: 'Bearer ' + token,
+            },
+            params: {
+              chatId: conversationData.chatID,
+            },
+          },
+        }),
+      onSuccess: async (data) => {
+        setChatdata(data);
+        setConversationData('');
+        setMessageData('');
+      },
+    });
+  };
+
+  const handleCheckMessageInterval = async () => {};
+
+  const handleGetConversation = (chatIdNew, chatIdOld) => {
+    getConversationData(chatIdNew, chatIdOld);
+  };
+
   const handleCreateChat = (data) => {
     const newUserOther = data.userOther.filter(
       (item) => item.userId !== user.userId,
     );
+
     setConversationData(data);
     setMessageData(data.message);
     setCurrentConversationUserOther(newUserOther);
     setConversationUserInfo(data.userOther);
-    setIsAddNewChat(false);
+    setCurrentUserAction('');
+  };
+
+  const handleChatAction = () => {
+    setCurrentUserAction(USER_CHAT_ACTION.USER_ACTION);
   };
 
   const handleOpenAddNewChat = () => {
-    setIsAddNewChat(true);
+    setCurrentUserAction(USER_CHAT_ACTION.SEARCH_USER_CHAT);
   };
 
   const handleCloseAddNewChat = () => {
-    setIsAddNewChat(false);
+    setCurrentUserAction('');
   };
 
   const resetData = () => {
@@ -134,10 +194,12 @@ const ChatPage = () => {
 
   return (
     <>
-      {isAddNewChat && (
+      {currentUserAction && (
         <ChatModal
           onCreateChat={handleCreateChat}
           onClose={handleCloseAddNewChat}
+          onLeaveChat={handleLeaveChat}
+          currentUserAction={currentUserAction}
         />
       )}
       {isChatPageLoading ? (
@@ -158,6 +220,7 @@ const ChatPage = () => {
                   onAddNewChat={handleOpenAddNewChat}
                   isConversationLoading={isConversationLoading}
                   messageData={messageData}
+                  onClickChatAction={handleChatAction}
                   conversationData={conversationData}
                   conversationUserInfo={conversationUserInfo}
                   onClickConversation={handleGetConversation}
