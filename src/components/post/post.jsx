@@ -52,7 +52,7 @@ const Post = ({ postInfo, onClick, onPostComment }) => {
     await action({
       action: async () =>
         await post({
-          url: `${API_LIST.post_add_comment}/${postID}/addComments`,
+          url: `${API_LIST.post_post}/${postID}/addComments`,
           data: {
             comment: commentValue,
           },

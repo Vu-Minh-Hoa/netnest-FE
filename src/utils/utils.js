@@ -20,10 +20,10 @@ export const convertDateTimeFormat = (dateTime) => {
   const diffYears = currentDate.diff(givenDate, 'years');
 
   let formattedDiff;
+
   if (diffSeconds < 0) {
     formattedDiff = '1s';
-  }
-  if (diffYears >= 1) {
+  } else if (diffYears >= 1) {
     formattedDiff = diffYears + 'y';
   } else if (diffWeeks >= 1) {
     formattedDiff = diffWeeks + 'w';

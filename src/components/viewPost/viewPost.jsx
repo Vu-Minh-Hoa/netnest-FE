@@ -14,7 +14,7 @@ import {
   postCommentReaction,
   postPostReaction,
 } from '../../services/like.service';
-import PostComment from '../postComment/postComment copy';
+import PostComment from '../postComment/postComment';
 import { convertDateTimeFormat } from '../../utils/utils';
 
 const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
@@ -91,7 +91,7 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
     await action({
       action: async () =>
         await post({
-          url: `${API_LIST.post_add_comment}/${viewPostInfo.postID}/addComments`,
+          url: `${API_LIST.post_post}/${viewPostInfo.postID}/addComments`,
           data: {
             comment: commentValue,
           },
@@ -126,7 +126,11 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   };
 
   const handlePostReaction = async () => {
-    const data = await postPostReaction({ isLiked, token, postId: postID });
+    const data = await postPostReaction({
+      isLiked,
+      token,
+      postId: postID,
+    });
     if (Object?.keys(data)?.length) setIsLiked((prev) => !prev);
     setCurrentLikeAmount(data.countLike);
   };
@@ -139,15 +143,18 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
             <CloseSvg />
           </div>
           <div className='view-post' onClick={(e) => e.stopPropagation()}>
-            {base64Image && (
+            {base64Image.length > 0 && (
               <div className='view-post__img'>
-                <img src={`data:image;base64, ${base64Image}`} alt='' />
+                <img src={`data:image; base64, ${base64Image}`} alt='' />
               </div>
             )}
-            {!base64Image && base64Video && (
+            {!base64Image.length > 0 && base64Video && (
               <div className='view-post__img'>
                 <video controls>
-                  <source src={`data:video;base64, ${base64Video}`} />
+                  <source
+                    src={`data:video; base64, ${base64Video}`}
+                    type='video/mp4'
+                  />
                 </video>
               </div>
             )}
@@ -201,7 +208,6 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
                           commentsItem={commentsItem}
                           key={key}
                           token={token}
-                          isLiked={isLiked}
                         />
                       );
                     })}
@@ -209,7 +215,10 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
               </div>
               <div className='view-post__reaction-timestamp'>
                 <div className='view-post__reaction'>
-                  <Like onClick={handlePostReaction} isLiked={isLiked} />
+                  <Like
+                    onClick={() => handlePostReaction()}
+                    isLiked={isLiked}
+                  />
                 </div>
                 <div className='view-post__like'>
                   {' '}

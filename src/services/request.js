@@ -1,7 +1,7 @@
 import axiosBase from 'axios';
-import exp from 'constants';
+// import exp from 'constants';
 
-const baseUrl = 'http://10.0.60.166:8080';
+const baseUrl = 'http://192.168.1.236:8080';
 
 const initRequest = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks

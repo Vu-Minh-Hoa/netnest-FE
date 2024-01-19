@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import Like from '../common/like/like';
 import { postCommentReaction } from '../../services/like.service';
 
-const PostComment = ({ commentsItem, key, onLike, token, isLiked }) => {
-  const [likeAmount, setLikeAmount] = useState(0);
-  const [isCommentLiked, setIsCommentLiked] = useState(isLiked);
+const PostComment = ({ commentsItem, key, onLike, token }) => {
+  const [likeAmount, setLikeAmount] = useState(commentsItem.countLike);
+  const [isCommentLiked, setIsCommentLiked] = useState(commentsItem.statusLike);
 
   useEffect(() => {
     if (!commentsItem?.countLike) return;
@@ -13,8 +13,9 @@ const PostComment = ({ commentsItem, key, onLike, token, isLiked }) => {
   }, [commentsItem]);
 
   const handleLikeComment = async () => {
+    console.log('isCommentLiked: ', isCommentLiked);
     const data = await postCommentReaction({
-      isLiked,
+      isLiked: isCommentLiked,
       token,
       commentId: commentsItem.commentID,
     });
