@@ -33,7 +33,7 @@ const ChatPage = () => {
 
   useEffect(() => {
     const checkMessInterval = setInterval(async () => {
-      await getCheckMessge();
+      await checkChatData();
     }, 5000);
 
     return () => clearInterval(checkMessInterval);
@@ -44,8 +44,12 @@ const ChatPage = () => {
     await actionAll([getChatAll()]);
   };
 
+  const checkChatData = async () => {
+    await actionAll([getCheckMessge(), getChatAll()]);
+  };
+
   const getChatAll = async () => {
-    if (!conversationData) setIsChatPageLoading(true);
+    if (!chatData) setIsChatPageLoading(true);
 
     await action({
       action: async () =>

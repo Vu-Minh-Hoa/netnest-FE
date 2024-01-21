@@ -2,15 +2,82 @@
   padding: 20px 40px;
   .profile-post-list {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 309px 309px 309px;
     grid-gap: 4px;
+    justify-content: center;
     margin: 0 auto;
     .profile-post {
+      position: relative;
+
+      &:hover {
+        .profile-post__info-hover {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .profile-post__liked {
+            display: flex;
+            align-items: center;
+            color: #ececec;
+            margin-right: 10px;
+
+            .profile-post__liked-icon {
+              margin-right: 3px;
+              display: flex;
+              align-items: center;
+              svg {
+                width: 20px;
+                height: 20px;
+              }
+            }
+            .profile-post__liked-amount {
+              font-size: 20px;
+              line-height: 20px;
+              font-weight: bold;
+            }
+          }
+          .profile-post__commented {
+            display: flex;
+            align-items: center;
+            color: #ececec;
+
+            .profile-post__commented-icon {
+              margin-right: 3px;
+              display: flex;
+              align-items: center;
+              svg {
+                width: 20px;
+                height: 20px;
+              }
+            }
+            .profile-post__commented-amount {
+              font-size: 20px;
+              line-height: 20px;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+
+      .profile-post__info-hover {
+        display: none;
+        color: #fff;
+        position: absolute;
+        top: 0;
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.4);
+        width: 100%;
+        height: 100%;
+      }
+
       .post__img-video {
         display: flex;
+        position: relative;
         justify-content: center;
         background-color: #000;
         cursor: pointer;
+        height: 309px;
+        width: 309px;
         border-radius: 3px;
         overflow: hidden;
 
@@ -18,9 +85,15 @@
         video {
           width: 100%;
           height: 100%;
-          max-height: 309px;
-          max-width: 309px;
+
           object-fit: contain;
+        }
+
+        .post__img-video__video-icon {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          color: #ececec;
         }
       }
     }

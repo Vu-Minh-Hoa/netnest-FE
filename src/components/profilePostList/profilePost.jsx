@@ -5,6 +5,9 @@ import { useAction } from '../../hooks/useAction';
 import { get, post } from '../../services/request';
 import { API_LIST } from '../../contants/common';
 import { useSelector } from 'react-redux';
+import VideoSvg from '../../assets/svg/videoSvg';
+import HearthSolidSvg from '../../assets/svg/hearthSolidSvg';
+import ChatSolidSvg from '../../assets/svg/chatSolidSvg';
 
 const ProfilePostLit = ({ postData }) => {
   const [isClickPost, setIsClickPost] = useState(false);
@@ -68,10 +71,7 @@ const ProfilePostLit = ({ postData }) => {
               return (
                 <div className='profile-post' key={key}>
                   {base64Image?.[0] && !base64video?.[0] && (
-                    <div
-                      className='post__img-video'
-                      onClick={() => handleOnClickPost(post.postID)}
-                    >
+                    <div className='post__img-video'>
                       <img
                         src={`data:image;base64, ${base64Image?.[0]}`}
                         alt=''
@@ -79,18 +79,41 @@ const ProfilePostLit = ({ postData }) => {
                     </div>
                   )}
                   {!base64Image?.[0] && base64video?.[0] && (
-                    <div
-                      className='post__img-video'
-                      onClick={() => handleOnClickPost(post.postID)}
-                    >
-                      <video controls>
+                    <div className='post__img-video'>
+                      <video>
                         <source
                           src={`data:video;base64, ${base64video[0]}`}
                           type='video/mp4'
                         ></source>
                       </video>
+                      <div className='post__img-video__video-icon'>
+                        <VideoSvg />
+                      </div>
                     </div>
                   )}
+                  <div
+                    className='profile-post__info-hover'
+                    onClick={() => handleOnClickPost(post.postID)}
+                  >
+                    {post?.countLike > 0 && (
+                      <div className='profile-post__liked'>
+                        <span className='profile-post__liked-icon'>
+                          <HearthSolidSvg />
+                        </span>
+                        <span className='profile-post__liked-amount'>
+                          {post?.countLike}
+                        </span>
+                      </div>
+                    )}
+                    <div className='profile-post__commented'>
+                      <span className='profile-post__commented-icon'>
+                        <ChatSolidSvg />
+                      </span>
+                      <span className='profile-post__commented-amount'>
+                        {post?.countComments}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               );
             })}

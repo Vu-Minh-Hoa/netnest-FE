@@ -7,7 +7,7 @@ import { useAction } from '../../../hooks/useAction';
 import { CHAT_LINK, HOME_LINK, PROFILE_LINK } from '../../../links/link';
 import ChatPage from '../../../pages/chat/chat';
 import HomePage from '../../../pages/home/home';
-import ProfilePage from '../../../pages/profile';
+import ProfilePage from '../../../pages/profile/profile';
 import { get } from '../../../services/request';
 import { setUserDetail } from '../../../slice/userSlice';
 import NavBar from '../../navbar/navBar';
@@ -53,6 +53,7 @@ const DashBoardLayout = () => {
         <Routes>
           <Route path={HOME_LINK} element={<HomePage />} />
           <Route path={`${PROFILE_LINK}/:username`} element={<ProfilePage />} />
+          <Route path={PROFILE_LINK} element={<ProfilePage />} />
           <Route path={CHAT_LINK} element={<ChatPage />} />
         </Routes>
       </div>

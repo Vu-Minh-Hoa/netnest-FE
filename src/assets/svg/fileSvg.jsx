@@ -1,7 +1,7 @@
 const FileSvg = () => {
   return (
     <svg
-      aria-label='Icon to represent media such as images or videos'
+      ariaLabel='Icon to represent media such as images or videos'
       className='x1lliihq x1n2onr6 x5n08af'
       fill='currentColor'
       height='77'

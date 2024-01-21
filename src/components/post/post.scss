@@ -7,12 +7,16 @@
   margin-bottom: 20px;
 
   .post__user-info__wrapper {
-    .post__user-info {
+    .post__user-info__container {
       display: inline-flex;
       align-items: center;
       margin-bottom: 12px;
-      cursor: pointer;
 
+      .post__user-info {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+      }
       .post__timestamp {
         font-size: 12px;
         font-weight: 400;

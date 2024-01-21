@@ -26,6 +26,7 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
     createDate,
     base64Image,
     base64Video,
+    followStatus,
     likeStatus,
     postID,
   } = viewPostInfo || {};
@@ -35,7 +36,7 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const [timestamp, setTimestamp] = useState(0);
   const [commentsValue, setCommentsValue] = useState(comments.reverse() || []);
   const [isLiked, setIsLiked] = useState(likeStatus);
-  const [followSuccess, setFollowSuccess] = useState('');
+  const [followSuccess, setFollowSuccess] = useState(followStatus);
   const [isLoading, setIsLoading] = useState('');
   const [isCommentLoading, setIsCommentLoading] = useState('');
   const { action } = useAction();
@@ -107,7 +108,6 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
           })
           .reverse();
         setCommentsValue(newData);
-        // console.log('comments: ', data.reverse());
         commentRef.current.innerHTML = '';
         setCommentValue('');
       },
@@ -131,8 +131,11 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
       token,
       postId: postID,
     });
-    if (Object?.keys(data)?.length) setIsLiked((prev) => !prev);
-    setCurrentLikeAmount(data.countLike);
+
+    if (Object?.keys(data)?.length) {
+      setIsLiked((prev) => !prev);
+      setCurrentLikeAmount(data.countLike);
+    }
   };
 
   return (

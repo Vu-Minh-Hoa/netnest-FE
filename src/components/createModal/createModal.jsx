@@ -13,18 +13,23 @@ import { useAction } from '../../hooks/useAction';
 import { post } from '../../services/request';
 import { API_LIST } from '../../contants/common';
 import { updateImage_Video } from '../../services/postImgVideo.service';
+import { useRouter } from '../../hooks/useRouter';
+import { useLocation } from 'react-router-dom';
 
 const CreateModal = ({ onClose, onCreateSuccess }) => {
-  const inputRef = useRef();
   const { action } = useAction();
+  const inputRef = useRef();
   const { user } = useSelector((store) => store.user);
   const { token } = useSelector((store) => store.user);
   const [previewVideo, setPreviewVideo] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [captionValue, setCaptionValue] = useState('');
   const [imageValue, setImageValue] = useState('');
   const [videoValue, setVideoValue] = useState('');
   const [fileType, setFileType] = useState('');
+  const location = useLocation();
+  const currentPath = location.pathname.split('/')[1];
 
   const handleOnClose = () => {
     onClose && onClose();
@@ -73,6 +78,7 @@ const CreateModal = ({ onClose, onCreateSuccess }) => {
   useEffect(() => {}, [captionValue]);
 
   const handleCaptionUpload = async () => {
+    setIsLoading(true);
     await action({
       action: async () =>
         post({
@@ -103,9 +109,14 @@ const CreateModal = ({ onClose, onCreateSuccess }) => {
           });
         }
 
+        if (currentPath === 'profile') {
+          window.location.reload();
+        }
+
         handleOnClose();
       },
     });
+    setIsLoading(false);
   };
 
   return (
@@ -122,6 +133,7 @@ const CreateModal = ({ onClose, onCreateSuccess }) => {
             onClick={() => handleCaptionUpload()}
             isDisabled={!(captionValue && (previewImage || previewVideo))}
             className={classNames('create-modal__header__share')}
+            isLoading={isLoading}
             text='Share'
           />
         </div>
@@ -129,7 +141,7 @@ const CreateModal = ({ onClose, onCreateSuccess }) => {
           <input
             ref={inputRef}
             onChange={(e) => handleFileType(e.target.files[0])}
-            accept='image/*,video/*'
+            accept='.png, .jpg, .jpeg,video/*'
             className='create-modal__input-file'
             type='file'
           />

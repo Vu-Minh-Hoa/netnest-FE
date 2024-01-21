@@ -153,7 +153,9 @@ export const Chat = ({
                         'center-at-two': userOthersInfo?.length === 2,
                       })}
                       style={{
-                        width: 'unset',
+                        width: `${
+                          userOthersInfo?.length > 2 ? '40px' : 'unset'
+                        }`,
                       }}
                     >
                       {userOthersInfo?.map((userOther) => {

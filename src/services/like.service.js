@@ -13,13 +13,14 @@ export const postPostReaction = async ({ isLiked, token, postId }) => {
   }
 
   if (isLiked) {
-    response = await deleteFormData({
+    const rawData = await deleteFormData({
       url,
       data,
       config: {
         headers: { authorization: 'Bearer ' + token },
       },
     });
+    response = rawData?.data;
   } else {
     response = await upload({
       url,
@@ -29,7 +30,6 @@ export const postPostReaction = async ({ isLiked, token, postId }) => {
       },
     });
   }
-
   return response;
 };
 
@@ -43,7 +43,6 @@ export const postCommentReaction = async ({ isLiked, token, commentId }) => {
   if (commentId) {
     data.append('commentId', commentId);
   }
-  console.log('isLiked: ', isLiked);
   if (isLiked) {
     response = await post({
       url,

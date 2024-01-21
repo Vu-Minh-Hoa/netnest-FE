@@ -13,7 +13,6 @@ const PostComment = ({ commentsItem, key, onLike, token }) => {
   }, [commentsItem]);
 
   const handleLikeComment = async () => {
-    console.log('isCommentLiked: ', isCommentLiked);
     const data = await postCommentReaction({
       isLiked: isCommentLiked,
       token,

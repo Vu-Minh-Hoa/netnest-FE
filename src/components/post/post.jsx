@@ -12,6 +12,7 @@ import Dot from '../common/dot/dot';
 import './post.scss';
 import Like from '../common/like/like';
 import { convertDateTimeFormat } from '../../utils/utils';
+import { useRouter } from '../../hooks/useRouter';
 
 const Post = ({ postInfo, onClick, onPostComment }) => {
   const {
@@ -31,6 +32,7 @@ const Post = ({ postInfo, onClick, onPostComment }) => {
   const [timestamp, setSimestamp] = useState('');
   const [currentLikeAmount, setCurrentLikeAmount] = useState(countLike);
   const [isLiked, setIsLiked] = useState(likeStatus);
+  const { pushRoute } = useRouter();
   const { action } = useAction();
   const { token } = useSelector((store) => store.user);
   const commentRef = useRef(null);
@@ -74,16 +76,26 @@ const Post = ({ postInfo, onClick, onPostComment }) => {
     setCurrentLikeAmount(data.countLike);
   };
 
+  const handleClickAvatar = () => {
+    pushRoute(`/profile/${createBy.userName}`);
+  };
+
   return (
     <div className='post'>
       <div className='post__user-info__wrapper'>
-        <div className='post__user-info'>
-          <div className='post__user-img__wrapper'>
-            <div className='post__user-img'>
-              <img src={`data:image;base64, ${createBy.base64Image}`} alt='' />
+        <div className='post__user-info__container'>
+          <div className='post__user-info' onClick={() => handleClickAvatar()}>
+            <div className='post__user-img__wrapper'>
+              <div className='post__user-img'>
+                <img
+                  src={`data:image;base64, ${createBy.base64Image}`}
+                  alt=''
+                />
+              </div>
             </div>
+            <span className='post__username'>{createBy.userName}</span>
           </div>
-          <span className='post__username'>{createBy.userName}</span>
+
           <Dot />
           <span className='post__timestamp'>{timestamp}</span>
           {!followStatus && (
