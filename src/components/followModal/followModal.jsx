@@ -99,7 +99,7 @@ const FollowModal = ({
     }
   };
 
-  const defUnfollow = async (userId) => {
+  const delUnfollow = async (userId) => {
     await action({
       action: async () =>
         await deleteMethod({
@@ -134,7 +134,7 @@ const FollowModal = ({
 
   const handleClickFollowOrUnFollow = async (userId, userName, isFollowed) => {
     if (isFollowed) {
-      await defUnfollow(userId);
+      await delUnfollow(userId);
     } else {
       await handleFollow(userName);
     }
@@ -186,11 +186,14 @@ const FollowModal = ({
                         username={followingUserInfo.userName}
                         userId={followingUserInfo.userId}
                         onClickFollow={handleClickFollowOrUnFollow}
+                        hasFollowBtn={
+                          followingUserInfo.statusFollow !==
+                          FOLLOW_STATUS.CURRENT_USER
+                        }
                         isFollowed={
                           followingUserInfo.statusFollow ===
                           FOLLOW_STATUS.FOLLOWED
                         }
-                        hasFollowBtn={true}
                         isLoading={isLoading}
                       />
                     </div>
@@ -215,7 +218,10 @@ const FollowModal = ({
                         username={followersUserInfo.userName}
                         userId={followersUserInfo.userId}
                         onClickFollow={handleClickFollowOrUnFollow}
-                        hasFollowBtn={true}
+                        hasFollowBtn={
+                          followersUserInfo.statusFollow !==
+                          FOLLOW_STATUS.CURRENT_USER
+                        }
                         isFollowed={
                           followersUserInfo.statusFollow ===
                           FOLLOW_STATUS.FOLLOWED

@@ -1,6 +1,9 @@
-import { useRef } from 'react';
+import classNames from 'classnames';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { DISPLAY_BASE64, FOLLOW } from '../../contants/common';
+import { API_LIST, DISPLAY_BASE64, FOLLOW } from '../../contants/common';
+import { useAction } from '../../hooks/useAction';
+import { deleteMethod, post } from '../../services/request';
 import './info.scss';
 
 const Info = ({
@@ -11,7 +14,61 @@ const Info = ({
   onClickFollow,
 }) => {
   const { user } = useSelector((store) => store.user);
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef();
+  const { token } = useSelector((store) => store.user);
+  const { action } = useAction();
+
+  useEffect(() => {
+    if (!userInfo?.statusFollow) return;
+
+    setIsFollowed(userInfo?.statusFollow);
+  }, [userInfo?.statusFollow]);
+
+  const handleFollow = async () => {
+    await action({
+      action: async () =>
+        await post({
+          url: API_LIST.post_add_following,
+          config: {
+            headers: { authorization: 'Bearer ' + token },
+            params: { userName: userInfo.userName },
+          },
+        }),
+      onSuccess: async (data) => {
+        setIsFollowed(true);
+      },
+    });
+    setIsLoading(false);
+  };
+
+  const delUnfollow = async () => {
+    await action({
+      action: async () =>
+        await deleteMethod({
+          url: API_LIST.del_unfollow,
+          config: {
+            headers: { authorization: 'Bearer ' + token },
+            params: { userId: userInfo.userId },
+          },
+        }),
+      onSuccess: async (data) => {
+        setIsFollowed(false);
+      },
+    });
+  };
+
+  const handleFollowBtn = async () => {
+    setIsLoading(true);
+
+    if (isFollowed) {
+      await delUnfollow();
+    } else {
+      await handleFollow();
+    }
+    setIsLoading(false);
+  };
 
   const handleClickEditAvatar = () => {
     inputRef.current.click();
@@ -50,7 +107,8 @@ const Info = ({
           <div className='user-info'>
             <div className='line'>
               <div className='user-info__username'>{userInfo.userName}</div>
-              {user.userId === userInfo.userId && (
+
+              {user.userId === userInfo.userId ? (
                 <>
                   <button onClick={() => handleClickEditAvatar()}>
                     Change avatar
@@ -59,6 +117,20 @@ const Info = ({
                     Change password
                   </button>
                 </>
+              ) : (
+                <button
+                  onClick={() => handleFollowBtn()}
+                  className={classNames(
+                    { 'btn-follow': !isFollowed },
+                    { 'btn-followed': isFollowed },
+                  )}
+                >
+                  {isLoading
+                    ? '...loading'
+                    : isFollowed
+                    ? 'Following'
+                    : 'Follow'}
+                </button>
               )}
             </div>
             <div className='line2'>

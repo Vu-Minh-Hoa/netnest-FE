@@ -27,6 +27,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (!token) return;
+    if (username) {
+      getUserDetail();
+      return;
+    }
     getData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,6 +46,7 @@ const ProfilePage = () => {
     const urlUsername = username ? `?username=${username}` : '';
 
     if (urlUsername) {
+      setIsLoadingComponent(true);
       await action({
         action: async () =>
           await get({
@@ -51,9 +56,11 @@ const ProfilePage = () => {
             },
           }),
         onSuccess: async (data) => {
+          await getUserPost(data?.userId);
           setUserInfo(data);
         },
       });
+      setIsLoadingComponent(false);
     } else {
       await action({
         action: async () =>
@@ -70,9 +77,8 @@ const ProfilePage = () => {
     }
   };
 
-  const getUserPost = async () => {
+  const getUserPost = async (userId) => {
     const urlUsername = username ? `?username=${username}` : '';
-
     if (urlUsername) {
       await action({
         action: async () =>
@@ -80,7 +86,7 @@ const ProfilePage = () => {
             url: API_LIST.get_post_user_profile,
             config: {
               headers: { authorization: 'Bearer ' + token },
-              params: { userId: userInfo?.userId },
+              params: { userId },
             },
           }),
         onSuccess: async (data) => {

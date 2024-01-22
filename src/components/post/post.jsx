@@ -31,6 +31,8 @@ const Post = ({ postInfo, onClick, onPostComment }) => {
   const [commentValue, setCommentValue] = useState('');
   const [timestamp, setSimestamp] = useState('');
   const [currentLikeAmount, setCurrentLikeAmount] = useState(countLike);
+  const [followSuccess, setFollowSuccess] = useState(followStatus);
+  const [isLoading, setIsLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(likeStatus);
   const { pushRoute } = useRouter();
   const { action } = useAction();
@@ -70,6 +72,25 @@ const Post = ({ postInfo, onClick, onPostComment }) => {
     });
   };
 
+  const handleFollow = async (userName) => {
+    console.log(userName);
+    setIsLoading(true);
+    await action({
+      action: async () =>
+        await post({
+          url: API_LIST.post_add_following,
+          config: {
+            headers: { authorization: 'Bearer ' + token },
+            params: { userName },
+          },
+        }),
+      onSuccess: async (data) => {
+        setFollowSuccess(true);
+      },
+    });
+    setIsLoading(false);
+  };
+
   const handlePostReaction = async () => {
     const data = await postPostReaction({ isLiked, token, postId: postID });
     if (Object?.keys(data)?.length) setIsLiked((prev) => !prev);
@@ -98,10 +119,19 @@ const Post = ({ postInfo, onClick, onPostComment }) => {
 
           <Dot />
           <span className='post__timestamp'>{timestamp}</span>
-          {!followStatus && (
+          {!followSuccess && (
             <>
               <Dot />
-              <span className='post__follow'>Follow</span>
+              {isLoading ? (
+                <span className='post__follow-loading'>...loading</span>
+              ) : (
+                <span
+                  className='post__follow'
+                  onClick={() => handleFollow(createBy.userName)}
+                >
+                  Follow
+                </span>
+              )}
             </>
           )}
         </div>

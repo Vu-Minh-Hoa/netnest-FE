@@ -26,6 +26,7 @@ export const FOLLOW = {
 
 export const FOLLOW_STATUS = {
   FOLLOWED: 'yes',
+  CURRENT_USER: 'you',
 };
 
 export const BASE_API = '';
