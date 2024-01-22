@@ -5,6 +5,7 @@ import ModalWrapper from '../common/modalWrapper/modalWrapper';
 import ModalLoadingCircle from '../common/loadingCircle/loadingCircle';
 import { CircularProgress, FadingBalls } from 'react-cssfx-loading';
 import { useRouter } from '../../hooks/useRouter';
+import { DISPLAY_BASE64 } from '../../contants/common';
 
 const SearchBar = ({
   recentSearchUser,
@@ -94,18 +95,57 @@ const SearchBar = ({
   );
 };
 
-const SearchUser = ({ userImg, username, fullname }) => {
+export const SearchUser = ({
+  userImg,
+  username,
+  fullname,
+  userId,
+  className = '',
+  hasFollowBtn = false,
+  isFollowed,
+  onClickUserInfo,
+  isLoading,
+  onClickFollow,
+}) => {
+  console.log(isFollowed);
+  const handleFollow = () => {
+    onClickFollow && onClickFollow(userId, username, isFollowed);
+  };
+
+  const handleClickUserInfo = () => {
+    onClickUserInfo && onClickUserInfo(username);
+  };
+
   return (
-    <div className='search__user-info'>
-      <img
-        className='search__user-img'
-        src={`data:image; base64, ${userImg}`}
-        alt=''
-      />
-      <div className=''>
-        <div className='search__user-username'>{username}</div>
-        <div className='search__user-fullname'>{fullname}</div>
+    <div className={classNames(className, 'search__user-info')}>
+      <div className='search__user-info__content-container'>
+        <div
+          className='search__user-info__content'
+          onClick={() => handleClickUserInfo()}
+        >
+          <img
+            className='search__user-img'
+            src={DISPLAY_BASE64.IMAGE + userImg}
+            alt=''
+          />
+          <div className='search__user-info__name'>
+            <div className='search__user-username'>{username}</div>
+            <div className='search__user-fullname'>{fullname}</div>
+          </div>
+        </div>
       </div>
+      {hasFollowBtn && (
+        <button
+          onClick={() => handleFollow()}
+          className={classNames(
+            { 'btn-follow': !isFollowed },
+            { 'btn-followed': isFollowed },
+            'search__user-info-btn',
+          )}
+        >
+          {isLoading ? '...loading' : isFollowed ? 'Following' : 'Follow'}
+        </button>
+      )}
     </div>
   );
 };

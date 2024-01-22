@@ -2,6 +2,7 @@ import axiosBase from 'axios';
 // import exp from 'constants';
 
 const baseUrl = 'http://192.168.1.236:8080';
+// const baseUrl = '';
 
 const initRequest = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -95,6 +96,7 @@ export const put = async (reqOption) => {
 };
 
 export const deleteMethod = async (reqOption) => {
+  console.log(reqOption);
   return await request((axios, genUrl) => {
     return axios.delete(genUrl, reqOption.config);
   }, reqOption);

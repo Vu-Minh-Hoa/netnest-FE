@@ -11,13 +11,17 @@ import ModalLoadingCircle from '../../components/common/loadingCircle/loadingCir
 import { useLocation, useParams } from 'react-router-dom';
 import ModalWrapper from '../../components/common/modalWrapper/modalWrapper';
 import EditModal from '../../components/edit/editModal';
+import FollowModal from '../../components/followModal/followModal';
 
 const ProfilePage = () => {
   const { username } = useParams();
   const [userInfo, setUserInfo] = useState({});
-  const [isOpenInfoEditModal, setIsOpenInfoEditModal] = useState(false);
   const [userPost, setUserPost] = useState({});
+  const [isOpenInfoEditModal, setIsOpenInfoEditModal] = useState(false);
   const [isLoadingComponent, setIsLoadingComponent] = useState(false);
+  const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
+  const [followState, setFollowState] = useState(false);
+  const [isFollow, setIsFollow] = useState(false);
   const { token } = useSelector((store) => store.user);
   const { action, actionAll } = useAction();
 
@@ -66,10 +70,6 @@ const ProfilePage = () => {
     }
   };
 
-  // const handleUserDetail = async (username) => {
-  //   await getUserDetail(username);
-  // };
-
   const getUserPost = async () => {
     await action({
       action: async () =>
@@ -109,6 +109,10 @@ const ProfilePage = () => {
     setIsLoadingComponent(false);
   };
 
+  const handleFollowStateData = async () => {
+    await getUserDetail();
+  };
+
   const handleEditProfile = async (file) => {
     await updateUserAvatar(file);
   };
@@ -121,10 +125,27 @@ const ProfilePage = () => {
     setIsOpenInfoEditModal(true);
   };
 
+  const handleOpenFollowModal = (followState) => {
+    setFollowState(followState);
+    setIsOpenFollowModal(true);
+  };
+
+  const handleCloseFollowModal = () => {
+    setIsOpenFollowModal(false);
+  };
+
   return (
     <>
       {isOpenInfoEditModal && (
         <EditModal userInfo={userInfo} onClose={handleCloseEditModal} />
+      )}
+      {isOpenFollowModal && (
+        <FollowModal
+          onClickFollowStateBtn={handleFollowStateData}
+          onClose={handleCloseFollowModal}
+          followState={followState}
+          userId={userInfo?.userId}
+        />
       )}
       {isLoadingComponent ? (
         <ModalLoadingCircle />
@@ -133,6 +154,7 @@ const ProfilePage = () => {
           <Info
             userInfo={userInfo}
             countPost={userPost.length}
+            onClickFollow={handleOpenFollowModal}
             onChangePassword={handleChangePassword}
             onEdit={handleEditProfile}
           />

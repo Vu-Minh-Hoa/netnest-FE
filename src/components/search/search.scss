@@ -65,11 +65,13 @@
       }
     }
   }
+
   .search__result-container {
     margin-top: 25px;
     .search__result {
     }
   }
+
   .search__recent-search {
     margin-top: 25px;
     padding-top: 22px;
@@ -101,39 +103,42 @@
       }
     }
   }
-  .search__user-info {
-    display: flex;
-    align-items: center;
-    padding: 8px 24px;
+}
+.search__user-info {
+  display: flex;
+  align-items: center;
+  padding: 8px 24px;
+  &:hover {
+    background-color: $navBarHoverColor;
+    cursor: pointer;
+  }
 
-    &:hover {
-      background-color: $navBarHoverColor;
+  .search__user-info__content-container {
+    flex: 1;
+    .search__user-info__content {
+      display: flex;
+      width: fit-content;
+      align-items: center;
       cursor: pointer;
-    }
-
-    .search__user-img {
-      height: 44px;
-      width: 44px;
-      border-radius: 100%;
-      border: 1px solid #ccc;
-      margin-right: 12px;
-
-      img {
-        height: 100%;
-        width: 100%;
-        object-fit: contain;
+      .search__user-img {
+        object-fit: cover;
+        height: 44px;
+        width: 44px;
+        border-radius: 100%;
+        border: 1px solid #ccc;
+        margin-right: 12px;
       }
-    }
 
-    .search__user-username {
-      font-size: 14px;
-      line-height: 18px;
-      font-weight: 500;
-    }
-    .search__user-fullname {
-      font-size: 14px;
-      line-height: 18px;
-      color: $subFontColor;
+      .search__user-username {
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 500;
+      }
+      .search__user-fullname {
+        font-size: 14px;
+        line-height: 18px;
+        color: $subFontColor;
+      }
     }
   }
 }

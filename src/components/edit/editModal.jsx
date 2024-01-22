@@ -10,6 +10,7 @@ import { useLogout } from '../../hooks/useLogout';
 import { post } from '../../services/request';
 import ModalWrapper from '../common/modalWrapper/modalWrapper';
 import './editModal.scss';
+import { useRouter } from '../../hooks/useRouter';
 
 const schema = yup.object({
   currentPassword: yup.string().required('Current password is required!'),
@@ -31,14 +32,17 @@ const EditModal = ({ userInfo, onClose }) => {
   const [errorText, setErrorText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const newPassword = watch('newPassword', '');
+  const currentPassword = watch('currentPassword', '');
   const confirmPassword = watch('confirmPassword', '');
 
   useEffect(() => {
-    if (newPassword !== confirmPassword) {
-      setErrorText('Password not match');
-    } else {
-      setErrorText('');
-    }
+    if (newPassword && newPassword === currentPassword) {
+      setErrorText("Can't reuse the current password.");
+    } else if (newPassword !== confirmPassword) {
+      setErrorText("Password doesn't match");
+    } else setErrorText('');
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newPassword, confirmPassword]);
 
   const onSubmitForm = async (data) => {
@@ -57,10 +61,12 @@ const EditModal = ({ userInfo, onClose }) => {
           },
         }),
       onSuccess: async (data) => {
-        resetState();
-      },
-      onError: async () => {
-        setErrorText('Incorect password');
+        setErrorText('');
+        if (data === 'success') {
+          resetState();
+        } else {
+          setErrorText('Incorect password!');
+        }
       },
     });
     setIsLoading(false);

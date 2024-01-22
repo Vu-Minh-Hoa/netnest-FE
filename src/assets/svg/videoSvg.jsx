@@ -6,7 +6,7 @@ function VideoSvg() {
       width='18'
       height='18'
       fill='currentColor'
-      ariaLabel='Clip'
+      aria-label='Clip'
       className='x1lliihq x1n2onr6 x9bdzbf'
       viewBox='0 0 24 24'
     >

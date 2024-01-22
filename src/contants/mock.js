@@ -2,26 +2,26 @@ export const SUGGESTION_LIST = [
   {
     id: 1,
     img: 'https://cdn.alongwalk.info/vn/wp-content/uploads/2022/09/28150733/image-69-hinh-anh-gai-xinh-trung-quoc-hot-girl-trung-quoc-dep-nhat-2022-166432725338362.jpg',
-    ma: 'dssdadsa',
-    name: 'Nguyen',
+    fullName: 'dssdadsa',
+    userName: 'Nguyen',
   },
   {
     id: 2,
     img: 'https://cdn.alongwalk.info/vn/wp-content/uploads/2022/09/28150733/image-69-hinh-anh-gai-xinh-trung-quoc-hot-girl-trung-quoc-dep-nhat-2022-166432725338362.jpg',
-    ma: 'dssdadsa',
-    name: 'Nguyen',
+    fullName: 'dssdadsa',
+    userName: 'Nguyen',
   },
   {
     id: 3,
     img: 'https://cdn.alongwalk.info/vn/wp-content/uploads/2022/09/28150733/image-69-hinh-anh-gai-xinh-trung-quoc-hot-girl-trung-quoc-dep-nhat-2022-166432725338362.jpg',
-    ma: 'dssdadsa',
-    name: 'Nguyen',
+    fullName: 'dssdadsa',
+    userName: 'Nguyen',
   },
   {
     id: 4,
     img: 'https://cdn.alongwalk.info/vn/wp-content/uploads/2022/09/28150733/image-69-hinh-anh-gai-xinh-trung-quoc-hot-girl-trung-quoc-dep-nhat-2022-166432725338362.jpg',
-    ma: 'dssdadsa',
-    name: 'Nguyen',
+    fullName: 'dssdadsa',
+    userName: 'Nguyen',
   },
 ];
 

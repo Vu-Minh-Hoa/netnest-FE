@@ -1,7 +1,7 @@
 function SearchChat() {
   return (
     <svg
-      ariaLabel='New message'
+      aria-label='New message'
       className='x1lliihq x1n2onr6 x5n08af'
       fill='currentColor'
       height='24'

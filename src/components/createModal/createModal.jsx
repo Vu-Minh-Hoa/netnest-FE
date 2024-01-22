@@ -1,20 +1,16 @@
 import classNames from 'classnames';
+import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import FileSvg from '../../assets/svg/fileSvg';
+import { API_LIST } from '../../contants/common';
+import { useAction } from '../../hooks/useAction';
+import { updateImage_Video } from '../../services/postImgVideo.service';
+import { post } from '../../services/request';
+import { toBase64 } from '../../utils/utils';
 import Button from '../common/button/button';
 import ModalWrapper from '../common/modalWrapper/modalWrapper';
 import './createModal.scss';
-import defaultUser from '../../assets/img/user.jpg';
-import { useRef } from 'react';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { toBase64 } from '../../utils/utils';
-import { useSelector } from 'react-redux';
-import { useAction } from '../../hooks/useAction';
-import { post } from '../../services/request';
-import { API_LIST } from '../../contants/common';
-import { updateImage_Video } from '../../services/postImgVideo.service';
-import { useRouter } from '../../hooks/useRouter';
-import { useLocation } from 'react-router-dom';
 
 const CreateModal = ({ onClose, onCreateSuccess }) => {
   const { action } = useAction();

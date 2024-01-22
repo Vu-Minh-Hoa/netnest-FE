@@ -16,7 +16,7 @@ const ChatPage = () => {
   const [currentConversationUserOther, setCurrentConversationUserOther] =
     useState([]);
   const [conversationUserInfo, setConversationUserInfo] = useState();
-  const [conversationData, setConversationData] = useState();
+  const [conversationData, setConversationData] = useState({});
   const [isConversationLoading, setIsConversationLoading] = useState(false);
   const [changedConversation, setChangedConversation] = useState(0);
   const [currentUserAction, setCurrentUserAction] = useState(false);
@@ -27,11 +27,12 @@ const ChatPage = () => {
 
   useEffect(() => {
     if (!token) return;
-    getChatData();
+    getChatAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   useEffect(() => {
+    if (Object.keys(conversationData).length <= 0) return;
     const checkMessInterval = setInterval(async () => {
       await checkChatData();
     }, 5000);
@@ -39,10 +40,6 @@ const ChatPage = () => {
     return () => clearInterval(checkMessInterval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationData]);
-
-  const getChatData = async () => {
-    await actionAll([getChatAll()]);
-  };
 
   const checkChatData = async () => {
     await actionAll([getCheckMessge(), getChatAll()]);
@@ -65,7 +62,7 @@ const ChatPage = () => {
         setChatdata(data);
       },
     });
-    if (!conversationData) setIsChatPageLoading(false);
+    if (!Object.keys(conversationData).length) setIsChatPageLoading(false);
   };
 
   const getConversationData = async (chatIdNew, chatIdOld = 0) => {
@@ -161,8 +158,6 @@ const ChatPage = () => {
       },
     });
   };
-
-  const handleCheckMessageInterval = async () => {};
 
   const handleGetConversation = (chatIdNew, chatIdOld) => {
     getConversationData(chatIdNew, chatIdOld);

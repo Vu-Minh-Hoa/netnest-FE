@@ -1,8 +1,16 @@
 import { useRef } from 'react';
-import { DISPLAY_BASE64 } from '../../contants/common';
+import { useSelector } from 'react-redux';
+import { DISPLAY_BASE64, FOLLOW } from '../../contants/common';
 import './info.scss';
 
-const Info = ({ userInfo, countPost, onChangePassword, onEdit }) => {
+const Info = ({
+  userInfo,
+  countPost,
+  onChangePassword,
+  onEdit,
+  onClickFollow,
+}) => {
+  const { user } = useSelector((store) => store.user);
   const inputRef = useRef();
 
   const handleClickEditAvatar = () => {
@@ -15,6 +23,10 @@ const Info = ({ userInfo, countPost, onChangePassword, onEdit }) => {
 
   const handleEditProfile = (file) => {
     onEdit && onEdit(file);
+  };
+
+  const handleClickFollow = (followState) => {
+    onClickFollow && onClickFollow(followState);
   };
 
   return (
@@ -38,21 +50,39 @@ const Info = ({ userInfo, countPost, onChangePassword, onEdit }) => {
           <div className='user-info'>
             <div className='line'>
               <div className='user-info__username'>{userInfo.userName}</div>
-              <button onClick={() => handleClickEditAvatar()}>
-                Change avatar
-              </button>
-              <button onClick={() => handleChangePassword()}>
-                Change password
-              </button>
+              {user.userId === userInfo.userId && (
+                <>
+                  <button onClick={() => handleClickEditAvatar()}>
+                    Change avatar
+                  </button>
+                  <button onClick={() => handleChangePassword()}>
+                    Change password
+                  </button>
+                </>
+              )}
             </div>
             <div className='line2'>
               <p>
                 <b>{countPost}</b> posts
               </p>
-              <p>
+              <p
+                style={{
+                  cursor: `${userInfo.countfollowers ? 'pointer' : ''}`,
+                }}
+                onClick={() =>
+                  userInfo.countfollowers && handleClickFollow(FOLLOW.FOLLOWER)
+                }
+              >
                 <b>{userInfo.countfollowers}</b> followers
               </p>
-              <p>
+              <p
+                style={{
+                  cursor: `${userInfo.countfollowing ? 'pointer' : ''}`,
+                }}
+                onClick={() =>
+                  userInfo.countfollowing && handleClickFollow(FOLLOW.FOLLOWING)
+                }
+              >
                 <b>{userInfo.countfollowing}</b> following
               </p>
             </div>

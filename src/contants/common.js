@@ -19,19 +19,26 @@ export const USER_CHAT_ACTION = {
   USER_ACTION: 'USER_ACTION',
 };
 
+export const FOLLOW = {
+  FOLLOWER: 'FOLLOWER',
+  FOLLOWING: 'FOLLOWING',
+};
+
 export const BASE_API = '';
 export const API_LIST = {
-  post_user: '/users',
   get_search_user: '/search',
   get_post_profile: '/profile/post',
   get_chat_all: '/chat/all',
   get_search_chat: '/chat/searchById',
   get_user_detail: '/UserDetail',
+  get_following_user: '/followingUser',
+  get_followers_user: '/followersUser',
   get_following: '/following',
   get_followers: '/followers',
   get_search_detail_user: '/searchDetail',
   get_check_messge: '/chat/checkMess',
   post_post: '/post',
+  post_user: '/users',
   post_create_chat: '/chat/search',
   post_change_password: '/changePassword',
   post_like_comment: '/post/addLikeComment',
@@ -52,4 +59,5 @@ export const API_LIST = {
   put_update_avatar: 'user/updateAvatar',
   suggest_friend: '/suggestFriend',
   del_leave_chat: 'chat/leaveChat',
+  del_unfollow: '/unFollow',
 };
