@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CircularProgress } from 'react-cssfx-loading';
 import { useSelector } from 'react-redux';
-import { API_LIST, FOLLOW } from '../../contants/common';
+import { API_LIST, FOLLOW, FOLLOW_STATUS } from '../../contants/common';
 import { useAction } from '../../hooks/useAction';
 import { useRouter } from '../../hooks/useRouter';
 import { deleteMethod, get, post } from '../../services/request';
@@ -20,17 +20,20 @@ const FollowModal = ({
   const [isGetFollowDataLoading, setIsGetFollowDataLoading] = useState(false);
   const [followingData, setFollowingData] = useState([]);
   const [followersData, setFollowersData] = useState([]);
-  const { action, actionAll } = useAction();
+  const { action } = useAction();
   const { token } = useSelector((store) => store.user);
 
   useEffect(() => {
+    if (!followState) return;
+
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [followState]);
 
   const getData = async () => {
     setIsGetFollowDataLoading(true);
-    await actionAll([getFollowingData(), getFollowedData()]);
+    if (followState === FOLLOW.FOLLOWING) await getFollowingData();
+    if (followState === FOLLOW.FOLLOWER) await getFollowedData();
     setIsGetFollowDataLoading(false);
   };
 
@@ -46,7 +49,6 @@ const FollowModal = ({
             },
           }),
         onSuccess: async (data) => {
-          console.log(data);
           setFollowingData(data);
         },
       });
@@ -78,7 +80,6 @@ const FollowModal = ({
             },
           }),
         onSuccess: async (data) => {
-          console.log(data);
           setFollowersData(data);
         },
       });
@@ -185,7 +186,10 @@ const FollowModal = ({
                         username={followingUserInfo.userName}
                         userId={followingUserInfo.userId}
                         onClickFollow={handleClickFollowOrUnFollow}
-                        isFollowed={true}
+                        isFollowed={
+                          followingUserInfo.statusFollow ===
+                          FOLLOW_STATUS.FOLLOWED
+                        }
                         hasFollowBtn={true}
                         isLoading={isLoading}
                       />
@@ -198,11 +202,6 @@ const FollowModal = ({
             followersData?.length > 0 && (
               <>
                 {followersData?.map((followersUserInfo, index) => {
-                  const userFollowState = !!followingData.find(
-                    (followingUserInfo) =>
-                      followingUserInfo.userId === followersUserInfo.userId,
-                  );
-
                   return (
                     <div
                       key={index}
@@ -217,7 +216,10 @@ const FollowModal = ({
                         userId={followersUserInfo.userId}
                         onClickFollow={handleClickFollowOrUnFollow}
                         hasFollowBtn={true}
-                        isFollowed={userFollowState}
+                        isFollowed={
+                          followersUserInfo.statusFollow ===
+                          FOLLOW_STATUS.FOLLOWED
+                        }
                         isLoading={isLoading}
                       />
                     </div>

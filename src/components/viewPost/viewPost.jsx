@@ -32,7 +32,7 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   } = viewPostInfo || {};
   const commentRef = useRef();
   const [commentValue, setCommentValue] = useState('');
-  const [currentLikeAmount, setCurrentLikeAmount] = useState(countLike);
+  const [currentLikeAmount, setCurrentLikeAmount] = useState(0);
   const [timestamp, setTimestamp] = useState(0);
   const [commentsValue, setCommentsValue] = useState(comments.reverse() || []);
   const [isLiked, setIsLiked] = useState(likeStatus);
@@ -41,6 +41,10 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const [isCommentLoading, setIsCommentLoading] = useState('');
   const { action } = useAction();
   const { token, user } = useSelector((store) => store.user);
+
+  useEffect(() => {
+    if (countLike) setCurrentLikeAmount(countLike);
+  }, [countLike]);
 
   useEffect(() => {
     if (!comments?.length) return;
@@ -223,10 +227,7 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
                     isLiked={isLiked}
                   />
                 </div>
-                <div className='view-post__like'>
-                  {' '}
-                  {currentLikeAmount || 0} likes{' '}
-                </div>
+                <div className='view-post__like'>{currentLikeAmount} likes</div>
                 <div className='view-post__timestamp'>{timestamp} ago</div>
               </div>
               <div className='view-post__comment'>

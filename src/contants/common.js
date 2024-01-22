@@ -24,10 +24,15 @@ export const FOLLOW = {
   FOLLOWING: 'FOLLOWING',
 };
 
+export const FOLLOW_STATUS = {
+  FOLLOWED: 'yes',
+};
+
 export const BASE_API = '';
 export const API_LIST = {
   get_search_user: '/search',
   get_post_profile: '/profile/post',
+  get_post_user_profile: 'profile/SearchPost',
   get_chat_all: '/chat/all',
   get_search_chat: '/chat/searchById',
   get_user_detail: '/UserDetail',

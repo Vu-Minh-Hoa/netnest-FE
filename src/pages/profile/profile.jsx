@@ -71,18 +71,36 @@ const ProfilePage = () => {
   };
 
   const getUserPost = async () => {
-    await action({
-      action: async () =>
-        await get({
-          url: API_LIST.get_post_profile,
-          config: {
-            headers: { authorization: 'Bearer ' + token },
-          },
-        }),
-      onSuccess: async (data) => {
-        setUserPost(data);
-      },
-    });
+    const urlUsername = username ? `?username=${username}` : '';
+
+    if (urlUsername) {
+      await action({
+        action: async () =>
+          await get({
+            url: API_LIST.get_post_user_profile,
+            config: {
+              headers: { authorization: 'Bearer ' + token },
+              params: { userId: userInfo?.userId },
+            },
+          }),
+        onSuccess: async (data) => {
+          setUserPost(data);
+        },
+      });
+    } else {
+      await action({
+        action: async () =>
+          await get({
+            url: API_LIST.get_post_profile,
+            config: {
+              headers: { authorization: 'Bearer ' + token },
+            },
+          }),
+        onSuccess: async (data) => {
+          setUserPost(data);
+        },
+      });
+    }
   };
 
   const updateUserAvatar = async (file) => {
@@ -139,14 +157,15 @@ const ProfilePage = () => {
       {isOpenInfoEditModal && (
         <EditModal userInfo={userInfo} onClose={handleCloseEditModal} />
       )}
-      {isOpenFollowModal && (
-        <FollowModal
-          onClickFollowStateBtn={handleFollowStateData}
-          onClose={handleCloseFollowModal}
-          followState={followState}
-          userId={userInfo?.userId}
-        />
-      )}
+      {(userInfo.countFollowers !== 0 || userInfo.countFollowing) &&
+        isOpenFollowModal && (
+          <FollowModal
+            onClickFollowStateBtn={handleFollowStateData}
+            onClose={handleCloseFollowModal}
+            followState={followState}
+            userId={userInfo?.userId}
+          />
+        )}
       {isLoadingComponent ? (
         <ModalLoadingCircle />
       ) : (

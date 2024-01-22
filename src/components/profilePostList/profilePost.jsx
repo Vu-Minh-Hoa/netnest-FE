@@ -8,11 +8,12 @@ import { useSelector } from 'react-redux';
 import VideoSvg from '../../assets/svg/videoSvg';
 import HearthSolidSvg from '../../assets/svg/hearthSolidSvg';
 import ChatSolidSvg from '../../assets/svg/chatSolidSvg';
+import ModalLoadingCircle from '../common/loadingCircle/loadingCircle';
 
 const ProfilePostLit = ({ postData }) => {
   const [isClickPost, setIsClickPost] = useState(false);
   const [postedComment, setPostedComment] = useState();
-  const [viewPostData, setViewPostData] = useState(false);
+  const [viewPostData, setViewPostData] = useState({});
   const { token } = useSelector((store) => store.user);
   const { action } = useAction();
 
@@ -56,7 +57,11 @@ const ProfilePostLit = ({ postData }) => {
 
   return (
     <>
-      {isClickPost && (
+      {isClickPost && !(Object.keys(viewPostData).length > 0) && (
+        <ModalLoadingCircle />
+      )}
+
+      {isClickPost && Object.keys(viewPostData).length > 0 && (
         <ViewPost
           postedComment={handlePostCommenRecallPostDetail}
           viewPostInfo={viewPostData}
