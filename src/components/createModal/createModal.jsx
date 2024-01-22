@@ -137,7 +137,7 @@ const CreateModal = ({ onClose, onCreateSuccess }) => {
           <input
             ref={inputRef}
             onChange={(e) => handleFileType(e.target.files[0])}
-            accept='.png, .jpg, .jpeg,video/*'
+            accept='.png, .jpg, .jpeg, .heic, video/*'
             className='create-modal__input-file'
             type='file'
           />

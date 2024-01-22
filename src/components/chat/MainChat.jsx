@@ -20,11 +20,12 @@ import SearchChat from '../../assets/svg/searchChat';
 import { CHAT_TYPE, DISPLAY_BASE64 } from '../../contants/common';
 import ModalLoadingCircle from '../common/loadingCircle/loadingCircle';
 import './MainChat.scss';
+import Button from '../common/button/button';
 
 export const Chat = ({
   user,
   onSendMessage,
-  conversationData,
+  conversationData = {},
   conversationUserOther = [],
   onClickConversation,
   chatData,
@@ -50,7 +51,7 @@ export const Chat = ({
               .join(', ')
           : conversationUserOther[0]?.userName;
 
-      setCurrentChatId(conversationData.chatID);
+      setCurrentChatId(conversationData?.chatID);
       setCurrentConversationUserOther(conversationUserOther);
       setCurrentConversationName(newChatName);
     }
@@ -181,9 +182,9 @@ export const Chat = ({
             })}
         </ConversationList>
       </Sidebar>
-      <ChatContainer>
-        <MessageList style={{ position: 'relative' }}>
-          {conversationData && (
+      {Object.keys(conversationData)?.length > 0 ? (
+        <ChatContainer>
+          <MessageList style={{ position: 'relative' }}>
             <ConversationHeader>
               {currentConversationUserOther?.length > 1 ? (
                 <AvatarGroup
@@ -220,58 +221,63 @@ export const Chat = ({
                 />
               </ConversationHeader.Actions>
             </ConversationHeader>
-          )}
-          {isConversationLoading && (
-            <ModalLoadingCircle
-              modalClassName={classNames('conversation-loading', {
-                'have-header': !!conversationData,
-              })}
+            {isConversationLoading && (
+              <ModalLoadingCircle
+                modalClassName={classNames('conversation-loading', {
+                  'have-header': Object.keys(conversationData)?.length > 0,
+                })}
+              />
+            )}
+            <div className='message-container'>
+              {messageData?.length > 0 &&
+                messageData?.map((messageInfo) => {
+                  const userBase64Image = conversationUserInfo?.find(
+                    (userInfo) => userInfo.userId === messageInfo.createById,
+                  )?.base64Image;
+
+                  const direction =
+                    user.userId === messageInfo.createById
+                      ? CHAT_TYPE.OUTGOING
+                      : CHAT_TYPE.INCOMING;
+
+                  return (
+                    <MessageGroup key={uuidv4()} direction={direction}>
+                      <Avatar
+                        src={DISPLAY_BASE64.IMAGE + userBase64Image}
+                        name={messageInfo.userName}
+                      />
+                      <MessageGroup.Messages>
+                        <Message
+                          sender={messageInfo.createByUserName}
+                          model={{
+                            type: 'html',
+                            payload: messageInfo.message,
+                            direction: direction,
+                            position: 'normal',
+                          }}
+                        />
+                      </MessageGroup.Messages>
+                    </MessageGroup>
+                  );
+                })}
+            </div>
+          </MessageList>
+
+          {Object.keys(conversationData)?.length > 0 && (
+            <MessageInput
+              onSend={handleSendMessage}
+              disabled={false}
+              attachButton={false}
+              placeholder='Type here...'
             />
           )}
-          <div className='message-container'>
-            {messageData?.length > 0 &&
-              messageData?.map((messageInfo) => {
-                const userBase64Image = conversationUserInfo?.find(
-                  (userInfo) => userInfo.userId === messageInfo.createById,
-                )?.base64Image;
-
-                const direction =
-                  user.userId === messageInfo.createById
-                    ? CHAT_TYPE.OUTGOING
-                    : CHAT_TYPE.INCOMING;
-
-                return (
-                  <MessageGroup key={uuidv4()} direction={direction}>
-                    <Avatar
-                      src={DISPLAY_BASE64.IMAGE + userBase64Image}
-                      name={messageInfo.userName}
-                    />
-                    <MessageGroup.Messages>
-                      <Message
-                        sender={messageInfo.createByUserName}
-                        model={{
-                          type: 'html',
-                          payload: messageInfo.message,
-                          direction: direction,
-                          position: 'normal',
-                        }}
-                      />
-                    </MessageGroup.Messages>
-                  </MessageGroup>
-                );
-              })}
-          </div>
-        </MessageList>
-
-        {conversationData && (
-          <MessageInput
-            onSend={handleSendMessage}
-            disabled={false}
-            attachButton={false}
-            placeholder='Type here...'
-          />
-        )}
-      </ChatContainer>
+        </ChatContainer>
+      ) : (
+        <div className='empty-chat'>
+          <h4 className='empty-chat__title'>Start a conversation </h4>
+          <Button text='Start chatting' onClick={() => handleAddNewChat()} />
+        </div>
+      )}
     </MainContainer>
   );
 };

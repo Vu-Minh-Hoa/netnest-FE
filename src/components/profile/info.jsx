@@ -36,7 +36,7 @@ const Info = ({
           <input
             ref={inputRef}
             onChange={(e) => handleEditProfile(e.target.files[0])}
-            accept='.png, .jpg, .jpeg'
+            accept='.png, .jpg, .jpeg, .heic'
             className='profile-card__input-file'
             type='file'
           />

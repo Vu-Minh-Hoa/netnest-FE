@@ -55,3 +55,18 @@
 .message-container {
   padding: 0 20px;
 }
+
+.cs-main-container {
+  .empty-chat {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .empty-chat__title {
+    }
+  }
+  .cs-avatar > img {
+    object-fit: cover !important;
+  }
+}
