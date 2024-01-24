@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import ModalWrapper from '../common/modalWrapper/modalWrapper';
 import './delModal.scss';
 

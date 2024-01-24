@@ -31,15 +31,15 @@ const ChatPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  useEffect(() => {
-    if (Object.keys(conversationData).length <= 0) return;
-    const checkMessInterval = setInterval(async () => {
-      await checkChatData();
-    }, 5000);
+  // useEffect(() => {
+  //   if (Object.keys(conversationData).length <= 0) return;
+  //   const checkMessInterval = setInterval(async () => {
+  //     await checkChatData();
+  //   }, 5000);
 
-    return () => clearInterval(checkMessInterval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationData]);
+  //   return () => clearInterval(checkMessInterval);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [conversationData]);
 
   const checkChatData = async () => {
     await actionAll([getCheckMessge(), getChatAll()]);
@@ -134,7 +134,6 @@ const ChatPage = () => {
       },
     });
     setIsConversationLoading(false);
-    setIsConversationLoading(false);
   };
 
   const handleLeaveChat = async () => {
@@ -157,6 +156,34 @@ const ChatPage = () => {
         setMessageData('');
       },
     });
+  };
+
+  const deleteMessage = async (messId) => {
+    setIsConversationLoading(true);
+
+    await action({
+      action: async () =>
+        await deleteMethod({
+          url: `${API_LIST.del_mess}`,
+          config: {
+            headers: {
+              authorization: 'Bearer ' + token,
+            },
+            params: {
+              chatId: conversationData.chatID,
+              messId: messId,
+            },
+          },
+        }),
+      onSuccess: async (data) => {
+        setMessageData(data);
+      },
+    });
+    setIsConversationLoading(false);
+  };
+
+  const handleDeleteMess = async (messId) => {
+    await deleteMessage(messId);
   };
 
   const handleGetConversation = (chatIdNew, chatIdOld) => {
@@ -223,6 +250,7 @@ const ChatPage = () => {
                   conversationData={conversationData}
                   conversationUserInfo={conversationUserInfo}
                   onClickConversation={handleGetConversation}
+                  onDeleteMess={handleDeleteMess}
                 />
               </Col>
             </Row>

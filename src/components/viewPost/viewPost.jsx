@@ -5,7 +5,7 @@ import CloseSvg from '../../assets/svg/closeSvg';
 import HearthSvg from '../../assets/svg/hearthSvg';
 import { API_LIST, DISPLAY_BASE64 } from '../../contants/common';
 import { useAction } from '../../hooks/useAction';
-import { post } from '../../services/request';
+import { post, get } from '../../services/request';
 import Dot from '../common/dot/dot';
 import './viewPost.scss';
 import { CircularProgress } from 'react-cssfx-loading';
@@ -102,6 +102,29 @@ const ViewPost = ({
     setIsLoading(false);
   };
 
+  const getPostComment = async () => {
+    await action({
+      action: async () =>
+        await get({
+          url: API_LIST.get_post_comment,
+          config: {
+            headers: { authorization: 'Bearer ' + token },
+            params: { postId: viewPostInfo.postID },
+          },
+        }),
+      onSuccess: async (data) => {
+        const newData = data
+          .map((item) => {
+            const newDateTimeFormate = convertDateTimeFormat(item.createDate);
+            return { ...item, createDate: newDateTimeFormate };
+          })
+          .reverse();
+
+        setCommentsValue(newData);
+      },
+    });
+  };
+
   const handlePostComment = async () => {
     setIsCommentLoading(true);
     await action({
@@ -116,16 +139,17 @@ const ViewPost = ({
           },
         }),
       onSuccess: async (data) => {
-        const newData = data
-          .map((item) => {
-            const newDateTimeFormate = convertDateTimeFormat(item.createDate);
-            return { ...item, createDate: newDateTimeFormate };
-          })
-          .reverse();
+        // const newData = data
+        //   .map((item) => {
+        //     const newDateTimeFormate = convertDateTimeFormat(item.createDate);
+        //     return { ...item, createDate: newDateTimeFormate };
+        //   })
+        //   .reverse();
 
-        console.log('new data: ', newData);
+        // setCommentsValue(newData);
 
-        setCommentsValue(newData);
+        await getPostComment();
+
         commentRef.current.innerHTML = '';
         setCommentValue('');
       },

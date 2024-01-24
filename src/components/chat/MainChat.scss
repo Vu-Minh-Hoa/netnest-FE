@@ -54,6 +54,29 @@
 
 .message-container {
   padding: 0 20px;
+  .cs-message-group {
+    &:hover {
+      .main-chat__message-action {
+        display: block;
+        cursor: pointer;
+      }
+    }
+
+    .main-chat__message-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .main-chat__message-action {
+      margin-right: 10px;
+      display: none;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
 }
 
 .cs-main-container {
