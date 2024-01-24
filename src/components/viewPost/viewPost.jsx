@@ -27,6 +27,7 @@ const ViewPost = ({
   onDeleteComment,
 }) => {
   const {
+    comments = [],
     countLike = 0,
     content,
     createBy,
@@ -44,9 +45,7 @@ const ViewPost = ({
   const [isShowDelModal, setIsShowDelModal] = useState(false);
   const [isShowDelCommentModal, setIsShowDelCommentModal] = useState(false);
   const [timestamp, setTimestamp] = useState(0);
-  const [commentsValue, setCommentsValue] = useState(
-    postComments?.reverse() || [],
-  );
+  const [commentsValue, setCommentsValue] = useState([]);
   const [isLiked, setIsLiked] = useState(likeStatus);
   const [followSuccess, setFollowSuccess] = useState(followStatus);
   const [isLoading, setIsLoading] = useState('');
@@ -59,12 +58,15 @@ const ViewPost = ({
   }, [countLike]);
 
   useEffect(() => {
+    // console.log(postComments);
+    if (postComments?.length <= 0) return;
     const newData = postComments
       .map((item) => {
         const newDateTimeFormate = convertDateTimeFormat(item.createDate);
         return { ...item, createDate: newDateTimeFormate };
       })
       .reverse();
+
     setCommentsValue(newData);
   }, [postComments]);
 
@@ -121,7 +123,7 @@ const ViewPost = ({
           })
           .reverse();
 
-        console.log('post comment: ', newData);
+        console.log('new data: ', newData);
 
         setCommentsValue(newData);
         commentRef.current.innerHTML = '';
@@ -274,6 +276,7 @@ const ViewPost = ({
                   </li>
                   {commentsValue?.length > 0 &&
                     commentsValue?.map((commentsItem, key) => {
+                      // console.log(commentsItem.commentID, commentsItem);
                       return (
                         <PostComment
                           commentsItem={commentsItem}

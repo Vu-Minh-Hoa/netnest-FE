@@ -12,13 +12,14 @@ const PostList = ({ postList = [] }) => {
   const [isClickPost, setIsClickPost] = useState(false);
   const [viewPostData, setViewPostData] = useState();
   const [postedComment, setPostedComment] = useState();
+  const [postComments, setPostComments] = useState();
   const { token } = useSelector((store) => store.user);
   const { action } = useAction();
 
   useEffect(() => {
     if (isClickPost) return;
 
-    setViewPostData('');
+    // setViewPostData('');
   }, [isClickPost]);
 
   useEffect(() => {
@@ -41,6 +42,7 @@ const PostList = ({ postList = [] }) => {
         }),
       onSuccess: async (data) => {
         setViewPostData(data);
+        setPostComments(data?.comments);
       },
     });
   };
@@ -64,7 +66,11 @@ const PostList = ({ postList = [] }) => {
     <>
       {isClickPost && !viewPostData && <ModalLoadingCircle />}
       {isClickPost && viewPostData && (
-        <ViewPost viewPostInfo={viewPostData} onClose={handleClosePost} />
+        <ViewPost
+          viewPostInfo={viewPostData}
+          postComments={postComments}
+          onClose={handleClosePost}
+        />
       )}
       <div className='post-list__container'>
         <div className='post-list__suggest-post'>
