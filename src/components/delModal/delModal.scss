@@ -1,0 +1,24 @@
+@import '../../styles/variable.scss';
+
+.chat-modal__user-action {
+  width: 400px;
+  background-color: #fff;
+
+  .chat-modal__user-leave-btn {
+    color: $redColor;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .chat-modal__user-cancel-btn {
+  }
+
+  .chat-modal__user-leave-btn,
+  .chat-modal__user-cancel-btn {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
+}

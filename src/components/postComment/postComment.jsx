@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react';
-import Like from '../common/like/like';
+import { useSelector } from 'react-redux';
+import HorizontalDot from '../../assets/svg/horizontalDot';
 import { postCommentReaction } from '../../services/like.service';
+import Like from '../common/like/like';
+import { DISPLAY_BASE64 } from '../../contants/common';
 
-const PostComment = ({ commentsItem, key, onLike, token }) => {
-  const [likeAmount, setLikeAmount] = useState(commentsItem.countLike);
-  const [isCommentLiked, setIsCommentLiked] = useState(commentsItem.statusLike);
+const PostComment = ({ commentsItem, key, onLike, token, onDeleteComment }) => {
+  const [likeAmount, setLikeAmount] = useState(false);
+  const [isCommentLiked, setIsCommentLiked] = useState(false);
+  const { user } = useSelector((store) => store.user);
 
   useEffect(() => {
-    if (!commentsItem?.countLike) return;
-
+    console.log(commentsItem.countLike, ': ', commentsItem.commentID);
     setLikeAmount(commentsItem?.countLike);
-  }, [commentsItem]);
+    setIsCommentLiked(commentsItem?.statusLike);
+  }, [commentsItem?.countLike, commentsItem?.statusLike]);
 
   const handleLikeComment = async () => {
     const data = await postCommentReaction({
@@ -27,6 +31,10 @@ const PostComment = ({ commentsItem, key, onLike, token }) => {
     }
   };
 
+  const handleClickUserCommentAction = () => {
+    onDeleteComment && onDeleteComment(commentsItem.commentID);
+  };
+
   return (
     <li
       key={key}
@@ -35,7 +43,7 @@ const PostComment = ({ commentsItem, key, onLike, token }) => {
       <div className='view-post__comment-section__comment__user-img__wrapper'>
         <div className='view-post__user-img view-post__comment-section__comment__user-img'>
           <img
-            src={`data:image;base64, ${commentsItem.user.base64Image}`}
+            src={DISPLAY_BASE64.IMAGE + commentsItem.user.base64Image}
             alt=''
           />
         </div>
@@ -50,6 +58,14 @@ const PostComment = ({ commentsItem, key, onLike, token }) => {
         <span className='view-post__timestamp'>{commentsItem?.createDate}</span>
         <div className='view-post__action'>
           <span>{likeAmount || 0} likes</span>
+          {user.userId === commentsItem?.user?.userId && (
+            <div
+              className='view-post__comment-section__user-action'
+              onClick={() => handleClickUserCommentAction()}
+            >
+              <HorizontalDot />
+            </div>
+          )}
         </div>
       </div>
       <div className='view-post__reaction'>

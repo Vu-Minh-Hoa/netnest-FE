@@ -133,6 +133,14 @@ const ProfilePage = () => {
     setIsLoadingComponent(false);
   };
 
+  const handleDeletePostComment = async () => {
+    await getUserPost();
+  };
+
+  const handleDeletePost = async () => {
+    await getData();
+  };
+
   const handleFollowStateData = async () => {
     await getUserDetail();
   };
@@ -183,7 +191,11 @@ const ProfilePage = () => {
             onChangePassword={handleChangePassword}
             onEdit={handleEditProfile}
           />
-          <ProfilePostList postData={userPost} />
+          <ProfilePostList
+            postData={userPost}
+            onDeletePost={handleDeletePost}
+            onDeleteComment={handleDeletePostComment}
+          />
         </>
       )}
     </>

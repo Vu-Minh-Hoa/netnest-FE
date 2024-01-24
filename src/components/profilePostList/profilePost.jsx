@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import ViewPost from '../viewPost/viewPost';
 import './profilePost.scss';
 import { useAction } from '../../hooks/useAction';
-import { get, post } from '../../services/request';
+import { deleteMethod, get, post } from '../../services/request';
 import { API_LIST } from '../../contants/common';
 import { useSelector } from 'react-redux';
 import VideoSvg from '../../assets/svg/videoSvg';
@@ -10,9 +10,10 @@ import HearthSolidSvg from '../../assets/svg/hearthSolidSvg';
 import ChatSolidSvg from '../../assets/svg/chatSolidSvg';
 import ModalLoadingCircle from '../common/loadingCircle/loadingCircle';
 
-const ProfilePostLit = ({ postData }) => {
+const ProfilePostList = ({ postData, onDeletePost, onDeleteComment }) => {
   const [isClickPost, setIsClickPost] = useState(false);
   const [postedComment, setPostedComment] = useState();
+  const [postComments, setPostComments] = useState();
   const [viewPostData, setViewPostData] = useState({});
   const { token } = useSelector((store) => store.user);
   const { action } = useAction();
@@ -26,6 +27,8 @@ const ProfilePostLit = ({ postData }) => {
   }, [postedComment]);
 
   const getPostDetail = async (postId) => {
+    setIsClickPost(true);
+
     await action({
       action: async () =>
         await get({
@@ -36,18 +39,59 @@ const ProfilePostLit = ({ postData }) => {
           },
         }),
       onSuccess: async (data) => {
+        setPostComments(data.comments);
         setViewPostData(data);
       },
     });
   };
 
+  const DelPost = async (postId) => {
+    await action({
+      action: async () =>
+        await deleteMethod({
+          url: API_LIST.del_post,
+          config: {
+            headers: { authorization: 'Bearer ' + token },
+            params: { postId: postId },
+          },
+        }),
+      onSuccess: async (data) => {
+        onDeletePost && onDeletePost();
+      },
+    });
+  };
+
+  const DelComment = async (postId, commentId) => {
+    await action({
+      action: async () =>
+        await deleteMethod({
+          url: API_LIST.del_post_comment,
+          config: {
+            headers: { authorization: 'Bearer ' + token },
+            params: { postId: postId, commentId: commentId },
+          },
+        }),
+      onSuccess: async (data) => {
+        await getPostDetail(postId);
+        onDeleteComment && onDeleteComment();
+      },
+    });
+  };
+
+  const handleDeletePost = async (postId) => {
+    await DelPost(postId);
+  };
+
   const handleOnClickPost = async (postId) => {
-    getPostDetail(postId);
-    setIsClickPost(true);
+    await getPostDetail(postId);
   };
 
   const handlePostCommenRecallPostDetail = (postId) => {
     setPostedComment(postId);
+  };
+
+  const handleDeleteComment = async (postId, conmmentId) => {
+    await DelComment(postId, conmmentId);
   };
 
   const handleClosePost = () => {
@@ -57,7 +101,7 @@ const ProfilePostLit = ({ postData }) => {
 
   return (
     <>
-      {isClickPost && !(Object.keys(viewPostData).length > 0) && (
+      {isClickPost && !Object.keys(viewPostData).length > 0 && (
         <ModalLoadingCircle />
       )}
 
@@ -65,7 +109,10 @@ const ProfilePostLit = ({ postData }) => {
         <ViewPost
           postedComment={handlePostCommenRecallPostDetail}
           viewPostInfo={viewPostData}
+          postComments={postComments}
           onClose={handleClosePost}
+          onDeletePost={handleDeletePost}
+          onDeleteComment={handleDeleteComment}
         />
       )}
       <div className='profile-post-list-container'>
@@ -128,4 +175,4 @@ const ProfilePostLit = ({ postData }) => {
   );
 };
 
-export default ProfilePostLit;
+export default ProfilePostList;

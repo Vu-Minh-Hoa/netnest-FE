@@ -64,6 +64,9 @@ export const API_LIST = {
   put_update_user: '/user/update',
   put_update_avatar: 'user/updateAvatar',
   suggest_friend: '/suggestFriend',
-  del_leave_chat: 'chat/leaveChat',
+  del_leave_chat: '/chat/leaveChat',
   del_unfollow: '/unFollow',
+  del_post_comment: '/post/deleteComment',
+  del_post: '/post',
+  del_mess: '/chat/deleteMess',
 };

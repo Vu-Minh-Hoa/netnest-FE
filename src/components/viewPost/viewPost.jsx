@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CloseSvg from '../../assets/svg/closeSvg';
 import HearthSvg from '../../assets/svg/hearthSvg';
-import { API_LIST } from '../../contants/common';
+import { API_LIST, DISPLAY_BASE64 } from '../../contants/common';
 import { useAction } from '../../hooks/useAction';
 import { post } from '../../services/request';
 import Dot from '../common/dot/dot';
@@ -16,10 +16,17 @@ import {
 } from '../../services/like.service';
 import PostComment from '../postComment/postComment';
 import { convertDateTimeFormat } from '../../utils/utils';
+import HorizontalDot from '../../assets/svg/horizontalDot';
+import DelModal from '../delModal/delModal';
 
-const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
+const ViewPost = ({
+  viewPostInfo,
+  postComments = [],
+  onClose,
+  onDeletePost,
+  onDeleteComment,
+}) => {
   const {
-    comments = [],
     countLike = 0,
     content,
     createBy,
@@ -33,8 +40,13 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   const commentRef = useRef();
   const [commentValue, setCommentValue] = useState('');
   const [currentLikeAmount, setCurrentLikeAmount] = useState(0);
+  const [currentCommentId, setCurrentCommentId] = useState(0);
+  const [isShowDelModal, setIsShowDelModal] = useState(false);
+  const [isShowDelCommentModal, setIsShowDelCommentModal] = useState(false);
   const [timestamp, setTimestamp] = useState(0);
-  const [commentsValue, setCommentsValue] = useState(comments.reverse() || []);
+  const [commentsValue, setCommentsValue] = useState(
+    postComments?.reverse() || [],
+  );
   const [isLiked, setIsLiked] = useState(likeStatus);
   const [followSuccess, setFollowSuccess] = useState(followStatus);
   const [isLoading, setIsLoading] = useState('');
@@ -47,17 +59,14 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
   }, [countLike]);
 
   useEffect(() => {
-    if (!comments?.length) return;
-
-    const newData = comments
+    const newData = postComments
       .map((item) => {
         const newDateTimeFormate = convertDateTimeFormat(item.createDate);
         return { ...item, createDate: newDateTimeFormate };
       })
       .reverse();
-
     setCommentsValue(newData);
-  }, [comments]);
+  }, [postComments]);
 
   useEffect(() => {
     if (!createDate) return;
@@ -111,6 +120,9 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
             return { ...item, createDate: newDateTimeFormate };
           })
           .reverse();
+
+        console.log('post comment: ', newData);
+
         setCommentsValue(newData);
         commentRef.current.innerHTML = '';
         setCommentValue('');
@@ -142,8 +154,49 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
     }
   };
 
+  const handleClickUserAction = () => {
+    setIsShowDelModal(true);
+  };
+
+  const handleDeletePost = () => {
+    setIsShowDelModal(false);
+    onDeletePost && onDeletePost(postID);
+  };
+
+  const handleCancelDelete = () => {
+    setIsShowDelModal(false);
+  };
+
+  const handleClickUserCommentAction = (commentId) => {
+    setCurrentCommentId(commentId);
+    setIsShowDelCommentModal(true);
+  };
+
+  const handleDeleteCommentPost = () => {
+    setIsShowDelCommentModal(false);
+    onDeletePost && onDeleteComment(postID, currentCommentId);
+  };
+
+  const handleCancelDeleteComment = () => {
+    setIsShowDelCommentModal(false);
+  };
+
   return (
     <>
+      {isShowDelModal && (
+        <DelModal
+          onDelete={handleDeletePost}
+          onClose={handleCancelDelete}
+          text='Delete post'
+        />
+      )}
+      {isShowDelCommentModal && (
+        <DelModal
+          onDelete={handleDeleteCommentPost}
+          onClose={handleCancelDeleteComment}
+          text='Delete comment'
+        />
+      )}
       {viewPostInfo && (
         <div className='view-post__container' onClick={() => handleClose()}>
           <div className='view-post__close' onClick={() => handleClose()}>
@@ -152,40 +205,51 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
           <div className='view-post' onClick={(e) => e.stopPropagation()}>
             {base64Image.length > 0 && (
               <div className='view-post__img'>
-                <img src={`data:image; base64, ${base64Image}`} alt='' />
+                <img src={DISPLAY_BASE64.IMAGE + base64Image} alt='' />
               </div>
             )}
             {!base64Image.length > 0 && base64Video && (
               <div className='view-post__img'>
                 <video controls>
                   <source
-                    src={`data:video; base64, ${base64Video}`}
+                    src={DISPLAY_BASE64.VIDEO + base64Video}
                     type='video/mp4'
                   />
                 </video>
               </div>
             )}
             <div className='view-post__comment-section'>
-              <div className='view-post__user-info view-post__author-info'>
-                <div className='view-post__user-img view-post__comment-section__user-img'>
-                  <img
-                    src={`data:image;base64, ${createBy?.base64Image}`}
-                    alt=''
-                  />
+              <div className='view-post__user-info__wrapper view-post__author-info'>
+                <div className='view-post__user-info'>
+                  <div className='view-post__user-img view-post__comment-section__user-img'>
+                    <img
+                      src={DISPLAY_BASE64.IMAGE + createBy?.base64Image}
+                      alt=''
+                    />
+                  </div>
+                  <div className='view-post__comment-section__user-name'>
+                    {createBy?.userName}
+                  </div>
+                  {!(user?.userId === createBy?.userId) && !followSuccess && (
+                    <>
+                      <Dot />
+                      <div
+                        className='view-post__comment-section__follow-btn'
+                        onClick={() => handleFollow()}
+                      >
+                        {isLoading ? '...loading' : 'Follow'}
+                      </div>
+                    </>
+                  )}
                 </div>
-                <div className='view-post__comment-section__user-name'>
-                  {createBy?.userName}
-                </div>
-                {!(user?.userId === createBy?.userId) && !followSuccess && (
-                  <>
-                    <Dot />
-                    <div
-                      className='view-post__comment-section__follow-btn'
-                      onClick={() => handleFollow()}
-                    >
-                      {isLoading ? '...loading' : 'Follow'}
-                    </div>
-                  </>
+
+                {user.userId === createBy?.userId && (
+                  <div
+                    className='view-post__comment-section__user-action'
+                    onClick={() => handleClickUserAction()}
+                  >
+                    <HorizontalDot />
+                  </div>
                 )}
               </div>
               <div className='view-post__comment-section__comment__wrapper'>
@@ -213,6 +277,7 @@ const ViewPost = ({ viewPostInfo, postComment, onClose }) => {
                       return (
                         <PostComment
                           commentsItem={commentsItem}
+                          onDeleteComment={handleClickUserCommentAction}
                           key={key}
                           token={token}
                         />

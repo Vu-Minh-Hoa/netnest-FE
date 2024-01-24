@@ -43,6 +43,7 @@
     .view-post__img {
       display: flex;
       justify-content: center;
+      align-items: center;
       background-color: #000;
       min-width: 350px;
       max-width: 540px;
@@ -66,10 +67,22 @@
       max-width: 440px;
       background-color: #fff;
 
+      .view-post__user-info__wrapper {
+        display: flex;
+        justify-content: space-between;
+        .view-post__comment-section__user-action {
+          margin-right: 15px;
+          cursor: pointer;
+          svg {
+            width: 22px;
+            height: 22px;
+          }
+        }
+      }
+
       .view-post__user-info {
         display: inline-flex;
         align-items: center;
-        cursor: pointer;
         padding: 14px 4px 14px 16px;
 
         .view-post__user-img {
@@ -131,6 +144,13 @@
               flex: 1;
 
               .view-post__action {
+                display: flex;
+
+                .view-post__comment-section__user-action {
+                  margin-left: 10px;
+                  cursor: pointer;
+                }
+
                 span {
                   margin-top: 4px;
                   font-size: 12px;

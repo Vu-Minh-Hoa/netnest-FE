@@ -1,7 +1,8 @@
 import axiosBase from 'axios';
 // import exp from 'constants';
 
-const baseUrl = 'http://192.168.1.236:8080';
+const baseUrl =
+  'https://1629-2405-4803-ffa9-c4a0-bcea-eb09-bd14-278e.ngrok-free.app';
 // const baseUrl = '';
 
 const initRequest = () => {

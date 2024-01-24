@@ -21,6 +21,7 @@ import { CHAT_TYPE, DISPLAY_BASE64 } from '../../contants/common';
 import ModalLoadingCircle from '../common/loadingCircle/loadingCircle';
 import './MainChat.scss';
 import Button from '../common/button/button';
+import { CircularProgress } from 'react-cssfx-loading';
 
 export const Chat = ({
   user,
@@ -272,6 +273,10 @@ export const Chat = ({
             />
           )}
         </ChatContainer>
+      ) : isConversationLoading ? (
+        <div className='conversation__loading'>
+          <CircularProgress />
+        </div>
       ) : (
         <div className='empty-chat'>
           <h4 className='empty-chat__title'>Start a conversation </h4>
