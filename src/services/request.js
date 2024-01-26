@@ -2,7 +2,7 @@ import axiosBase from 'axios';
 // import exp from 'constants';
 
 const baseUrl =
-  'https://1629-2405-4803-ffa9-c4a0-bcea-eb09-bd14-278e.ngrok-free.app';
+  'https://fd98-2405-4803-fd63-7070-d022-889c-f66b-1ec5.ngrok-free.app';
 // const baseUrl = '';
 
 const initRequest = () => {

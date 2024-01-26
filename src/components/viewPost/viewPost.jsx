@@ -5,7 +5,7 @@ import CloseSvg from '../../assets/svg/closeSvg';
 import HearthSvg from '../../assets/svg/hearthSvg';
 import { API_LIST, DISPLAY_BASE64 } from '../../contants/common';
 import { useAction } from '../../hooks/useAction';
-import { post, get } from '../../services/request';
+import { post, get, deleteMethod } from '../../services/request';
 import Dot from '../common/dot/dot';
 import './viewPost.scss';
 import { CircularProgress } from 'react-cssfx-loading';
@@ -18,16 +18,15 @@ import PostComment from '../postComment/postComment';
 import { convertDateTimeFormat } from '../../utils/utils';
 import HorizontalDot from '../../assets/svg/horizontalDot';
 import DelModal from '../delModal/delModal';
+import ModalLoadingCircle from '../common/loadingCircle/loadingCircle';
 
 const ViewPost = ({
   viewPostInfo,
   postComments = [],
   onClose,
   onDeletePost,
-  onDeleteComment,
 }) => {
   const {
-    comments = [],
     countLike = 0,
     content,
     createBy,
@@ -44,6 +43,7 @@ const ViewPost = ({
   const [currentCommentId, setCurrentCommentId] = useState(0);
   const [isShowDelModal, setIsShowDelModal] = useState(false);
   const [isShowDelCommentModal, setIsShowDelCommentModal] = useState(false);
+  const [isDelCommentLoading, setIsDelCommentLoading] = useState(false);
   const [timestamp, setTimestamp] = useState(0);
   const [commentsValue, setCommentsValue] = useState([]);
   const [isLiked, setIsLiked] = useState(likeStatus);
@@ -59,7 +59,6 @@ const ViewPost = ({
 
   useEffect(() => {
     // console.log(postComments);
-    if (postComments?.length <= 0) return;
     const newData = postComments
       .map((item) => {
         const newDateTimeFormate = convertDateTimeFormat(item.createDate);
@@ -158,6 +157,24 @@ const ViewPost = ({
     setIsCommentLoading(false);
   };
 
+  const DelComment = async (postId, commentId) => {
+    setIsDelCommentLoading(true);
+    await action({
+      action: async () =>
+        await deleteMethod({
+          url: API_LIST.del_post_comment,
+          config: {
+            headers: { authorization: 'Bearer ' + token },
+            params: { postId: postId, commentId: commentId },
+          },
+        }),
+      onSuccess: async (data) => {
+        await getPostComment();
+      },
+    });
+    setIsDelCommentLoading(false);
+  };
+
   const handleClose = () => {
     onClose();
   };
@@ -198,9 +215,9 @@ const ViewPost = ({
     setIsShowDelCommentModal(true);
   };
 
-  const handleDeleteCommentPost = () => {
+  const handleDeleteCommentPost = async () => {
     setIsShowDelCommentModal(false);
-    onDeletePost && onDeleteComment(postID, currentCommentId);
+    await DelComment(postID, currentCommentId);
   };
 
   const handleCancelDeleteComment = () => {
@@ -278,7 +295,16 @@ const ViewPost = ({
                   </div>
                 )}
               </div>
-              <div className='view-post__comment-section__comment__wrapper'>
+              <div
+                className={classNames(
+                  'view-post__comment-section__comment__wrapper',
+                )}
+              >
+                {/* {isDelCommentLoading && (
+                  <ModalLoadingCircle
+                    modalClassName={'view-post__comment-section__loading'}
+                  />
+                )} */}
                 <ul className='view-post__comment-section__comments'>
                   <li className='view-post__user-info view-post__comment-section__comment view-post__comment-section__comment__user'>
                     <div className='view-post__comment-section__comment__user-img__wrapper'>
@@ -299,13 +325,12 @@ const ViewPost = ({
                     </div>
                   </li>
                   {commentsValue?.length > 0 &&
-                    commentsValue?.map((commentsItem, key) => {
-                      // console.log(commentsItem.commentID, commentsItem);
+                    commentsValue?.map((commentsItem) => {
                       return (
                         <PostComment
                           commentsItem={commentsItem}
                           onDeleteComment={handleClickUserCommentAction}
-                          key={key}
+                          key={commentsItem.commentID}
                           token={token}
                         />
                       );

@@ -1,8 +1,8 @@
 function HorizontalDot() {
   return (
     <svg
-      ariaLabel='More'
-      class='x1lliihq x1n2onr6 x5n08af'
+      aria-label='More'
+      className='x1lliihq x1n2onr6 x5n08af'
       fill='currentColor'
       height='16'
       role='img'

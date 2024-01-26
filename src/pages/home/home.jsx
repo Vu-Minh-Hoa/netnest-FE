@@ -106,10 +106,16 @@ const HomePage = () => {
   } else {
     return (
       <div className='homePage-suggestion'>
-        <div className='homePage-suggestion-content'>
+        <div className='homePage-suggestion__content'>
           <FollowedList listUser={followingData || []} />
           <PostList postList={postData || []} />
         </div>
+        {suggestFriend?.length > 0 && (
+          <div className='homePage-guggestion__follow'>
+            <span>Suggested for you</span>
+            <SuggestionList listItem={suggestFriend} />
+          </div>
+        )}
       </div>
     );
   }

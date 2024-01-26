@@ -137,6 +137,7 @@ const ChatPage = () => {
   };
 
   const handleLeaveChat = async () => {
+    console.log('leave');
     await action({
       action: async () =>
         await deleteMethod({
@@ -231,7 +232,7 @@ const ChatPage = () => {
       {isChatPageLoading ? (
         <ModalLoadingCircle />
       ) : (
-        <div className='h-100 d-flex flex-column overflow-hidden'>
+        <div className='h-100 d-flex flex-column overflow-hidden chat-page'>
           <Container
             fluid
             className='flex-grow-1 position-relative overflow-hidden chat-page-container'

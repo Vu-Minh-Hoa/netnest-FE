@@ -1,11 +1,15 @@
 .homePage-suggestion {
+  display: flex;
+  justify-content: center;
   width: 100%;
   padding-top: 30px;
-  .homePage-suggestion-content {
+  position: relative;
+
+  .homePage-suggestion__content {
     display: flex;
     flex-direction: column;
     max-width: 580px;
-    margin: 0 auto;
+    margin-right: 384px;
     span {
       font-size: 14px;
       font-weight: 600;
@@ -15,6 +19,31 @@
     }
     .list-item {
       margin-top: 20px;
+    }
+  }
+  .homePage-guggestion__follow {
+    padding-left: 64px;
+    position: fixed;
+    right: 70px;
+    .item {
+      width: 320px;
+      max-width: 320px;
+      padding-left: 0px;
+      .info-item {
+        .group-info {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          .username {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0;
+          }
+          h4 {
+            font-size: 12px;
+          }
+        }
+      }
     }
   }
 }

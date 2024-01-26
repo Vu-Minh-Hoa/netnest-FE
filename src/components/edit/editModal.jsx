@@ -10,11 +10,17 @@ import { useLogout } from '../../hooks/useLogout';
 import { post } from '../../services/request';
 import ModalWrapper from '../common/modalWrapper/modalWrapper';
 import './editModal.scss';
-import { useRouter } from '../../hooks/useRouter';
 
 const schema = yup.object({
   currentPassword: yup.string().required('Current password is required!'),
-  newPassword: yup.string().required('New password is required!'),
+  newPassword: yup
+    .string()
+    .required('New password is required!')
+    .min(8, 'Password must be at least 8 characters.')
+    .matches(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      'Password must contain special character.',
+    ),
   confirmPassword: yup.string().required('Confirm password is required!'),
 });
 
@@ -34,6 +40,14 @@ const EditModal = ({ userInfo, onClose }) => {
   const newPassword = watch('newPassword', '');
   const currentPassword = watch('currentPassword', '');
   const confirmPassword = watch('confirmPassword', '');
+  const allValue = watch();
+
+  useEffect(() => {
+    if (errorText) {
+      setErrorText('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allValue]);
 
   useEffect(() => {
     if (newPassword && newPassword === currentPassword) {
@@ -121,9 +135,11 @@ const EditModal = ({ userInfo, onClose }) => {
               placeholder='Current password'
               {...register('currentPassword')}
             />
-            <p className='edit-modal-errText'>
-              {errors.currentPassword?.message}
-            </p>
+            {errors.currentPassword?.message && (
+              <p className='edit-modal-errText'>
+                {errors.currentPassword?.message}
+              </p>
+            )}
           </div>
           <div className='edit-modal__input-form'>
             <p className='edit-modal__input-title'>New password:</p>
@@ -134,7 +150,11 @@ const EditModal = ({ userInfo, onClose }) => {
               placeholder='New password'
               {...register('newPassword')}
             />
-            <p className='edit-modal-errText'>{errors.newPassword?.message}</p>
+            {errors.newPassword?.message && (
+              <p className='edit-modal-errText'>
+                {errors.newPassword?.message}
+              </p>
+            )}
           </div>
 
           <div className='edit-modal__input-form'>
@@ -146,9 +166,11 @@ const EditModal = ({ userInfo, onClose }) => {
               placeholder='Confirm password'
               {...register('confirmPassword')}
             />
-            <p className='edit-modal-errText'>
-              {errors.confirmPassword?.message || errorText}
-            </p>
+            {(errors.confirmPassword?.message || errorText) && (
+              <p className='edit-modal-errText'>
+                {errors.confirmPassword?.message || errorText}
+              </p>
+            )}
           </div>
 
           <Button

@@ -1,33 +1,50 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Button from '../../components/common/button/button';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import './register.scss';
 import { useDispatch } from 'react-redux';
-import { setToken } from '../../slice/userSlice';
-import { useRouter } from '../../hooks/useRouter';
+import * as yup from 'yup';
+import Button from '../../components/common/button/button';
 import { API_LIST } from '../../contants/common';
-import { post } from '../../services/request';
 import { useAction } from '../../hooks/useAction';
+import { useRouter } from '../../hooks/useRouter';
+import { post } from '../../services/request';
+import { setToken } from '../../slice/userSlice';
+import './register.scss';
 
 const schema = yup.object({
   email: yup.string().required('Email is required!').email('Invalid email!'),
-  password: yup.string().required('Password is required!'),
   username: yup.string().required('User Name is required!'),
   fullname: yup.string().required('Full Name is required!'),
+  password: yup
+    .string()
+    .required('Password is required!')
+    .min(8, 'Password must be at least 8 characters.')
+    .matches(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      'Password must contain special character.',
+    ),
 });
 
 const RegisterPage = () => {
   const {
     register,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const dispatch = useDispatch();
   const { pushRoute } = useRouter();
   const { action } = useAction();
+  const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState('');
+  const allValue = watch();
+
+  useEffect(() => {
+    if (errorText) {
+      setErrorText('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allValue]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -39,6 +56,8 @@ const RegisterPage = () => {
   }, []);
 
   const onSubmitForm = async (data) => {
+    setIsLoading(true);
+
     await action({
       action: async () =>
         await post({
@@ -65,6 +84,7 @@ const RegisterPage = () => {
         setErrorText('Something gone wrong');
       },
     });
+    setIsLoading(false);
   };
 
   return (
@@ -78,7 +98,9 @@ const RegisterPage = () => {
           placeholder='Fullname'
           {...register('fullname')}
         />
-        <p className='register-errText'>{errors.fullname?.message}</p>
+        {errors.fullname?.message && (
+          <p className='register-errText'>{errors.fullname?.message}</p>
+        )}
         <input
           className='register-username'
           type='text'
@@ -86,7 +108,9 @@ const RegisterPage = () => {
           placeholder='Username'
           {...register('username')}
         />
-        <p className='register-errText'>{errors.username?.message}</p>
+        {errors.username?.message && (
+          <p className='register-errText'>{errors.username?.message}</p>
+        )}
         <input
           className='register-email'
           type='text'
@@ -94,7 +118,9 @@ const RegisterPage = () => {
           placeholder='Email'
           {...register('email')}
         />
-        <p className='register-errText'>{errors.email?.message}</p>
+        {errors.email?.message && (
+          <p className='register-errText'>{errors.email?.message}</p>
+        )}
         <input
           className='register-password'
           rows='10'
@@ -103,9 +129,16 @@ const RegisterPage = () => {
           placeholder='Password'
           {...register('password')}
         />
-        <p className='register-errText'>{errors.password?.message}</p>
-        <p className='register-errText'>{errorText}</p>
-        <Button btnType='submit' text='Register' className='register-button' />
+        {errors.password?.message && (
+          <p className='register-errText'>{errors.password?.message}</p>
+        )}
+        {errorText && <p className='register-errText'>{errorText}</p>}
+        <Button
+          btnType='submit'
+          text='Register'
+          className='register-button'
+          isLoading={isLoading}
+        />
         <a href='/login' className='register-dontHave'>
           Already have an account
         </a>

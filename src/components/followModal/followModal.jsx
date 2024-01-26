@@ -3,6 +3,7 @@ import { CircularProgress } from 'react-cssfx-loading';
 import { useSelector } from 'react-redux';
 import { API_LIST, FOLLOW, FOLLOW_STATUS } from '../../contants/common';
 import { useAction } from '../../hooks/useAction';
+import { useFollow } from '../../hooks/useFollow';
 import { useRouter } from '../../hooks/useRouter';
 import { deleteMethod, get, post } from '../../services/request';
 import ModalWrapper from '../common/modalWrapper/modalWrapper';
@@ -18,6 +19,7 @@ const FollowModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const { pushRoute } = useRouter();
   const [isGetFollowDataLoading, setIsGetFollowDataLoading] = useState(false);
+  const { delUnfollow, addFollow } = useFollow();
   const [followingData, setFollowingData] = useState([]);
   const [followersData, setFollowersData] = useState([]);
   const { action } = useAction();
@@ -99,33 +101,33 @@ const FollowModal = ({
     }
   };
 
-  const delUnfollow = async (userId) => {
-    await action({
-      action: async () =>
-        await deleteMethod({
-          url: API_LIST.del_unfollow,
-          config: {
-            headers: { authorization: 'Bearer ' + token },
-            params: { userId: userId },
-          },
-        }),
-      onSuccess: async (data) => {},
-    });
-  };
+  // const delUnfollow = async (userId) => {
+  //   await action({
+  //     action: async () =>
+  //       await deleteMethod({
+  //         url: API_LIST.del_unfollow,
+  //         config: {
+  //           headers: { authorization: 'Bearer ' + token },
+  //           params: { userId: userId },
+  //         },
+  //       }),
+  //     onSuccess: async (data) => {},
+  //   });
+  // };
 
-  const handleFollow = async (userName) => {
-    await action({
-      action: async () =>
-        await post({
-          url: API_LIST.post_add_following,
-          config: {
-            headers: { authorization: 'Bearer ' + token },
-            params: { userName: userName },
-          },
-        }),
-      onSuccess: async (data) => {},
-    });
-  };
+  // const handleFollow = async (userName) => {
+  //   await action({
+  //     action: async () =>
+  //       await post({
+  //         url: API_LIST.post_add_following,
+  //         config: {
+  //           headers: { authorization: 'Bearer ' + token },
+  //           params: { userName: userName },
+  //         },
+  //       }),
+  //     onSuccess: async (data) => {},
+  //   });
+  // };
 
   const handleClickFollowUser = (username) => {
     handleCloseModal();
@@ -136,7 +138,7 @@ const FollowModal = ({
     if (isFollowed) {
       await delUnfollow(userId);
     } else {
-      await handleFollow(userName);
+      await addFollow(userName);
     }
     await getData();
     handleOnClickFollowStateBtn();

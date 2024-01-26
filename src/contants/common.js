@@ -29,6 +29,10 @@ export const FOLLOW_STATUS = {
   CURRENT_USER: 'you',
 };
 
+export const API_STATUS = {
+  FOLLOW_SUCCESS: 'Following thanh cong',
+};
+
 export const BASE_API = '';
 export const API_LIST = {
   get_search_user: '/search',

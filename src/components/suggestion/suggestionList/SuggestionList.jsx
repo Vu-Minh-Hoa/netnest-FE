@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SuggestionList.scss';
 import cn from 'classnames';
 import { useAction } from '../../../hooks/useAction';
 import { post } from '../../../services/request';
-import { API_LIST } from '../../../contants/common';
+import { API_LIST, API_STATUS } from '../../../contants/common';
 import { useSelector } from 'react-redux';
+import { useFollow } from '../../../hooks/useFollow';
+import { useRouter } from '../../../hooks/useRouter';
 
 const SuggestionList = ({ listItem = {} }) => {
   return (
     <div className='list-item'>
-      {listItem?.map((item) => (
+      {listItem?.map((item, index) => (
         <SuggestionItem
-          key={item.userId}
+          key={index}
+          userId={item.userId}
           img={item?.base64Image}
+          followStatus={item?.statusFollow}
           username={item?.userName}
           fullname={item?.fullName}
         />
@@ -21,33 +25,36 @@ const SuggestionList = ({ listItem = {} }) => {
   );
 };
 
-const SuggestionItem = ({ id, img, username, fullname }) => {
-  const [isFollowed, setIsFollowed] = useState('');
+const SuggestionItem = ({ userId, img, username, fullname, followStatus }) => {
+  const [isFollowed, setIsFollowed] = useState(false);
   const [isLoading, setIsLoading] = useState('');
-  const { token } = useSelector((store) => store.user);
-  const { action } = useAction();
+  const { delUnfollow, addFollow } = useFollow();
+  const { pushRoute } = useRouter();
+
+  useEffect(() => {
+    setIsFollowed(followStatus);
+  }, [followStatus]);
 
   const handleFollow = async () => {
+    if (isLoading) return;
     setIsLoading(true);
-    await action({
-      action: async () =>
-        await post({
-          url: API_LIST.post_add_following,
-          config: {
-            headers: { authorization: 'Bearer ' + token },
-            params: { userName: username },
-          },
-        }),
-      onSuccess: async (data) => {
-        setIsFollowed(true);
-        setIsLoading(false);
-      },
-    });
+    if (!isFollowed) {
+      await addFollow(username);
+      setIsFollowed(true);
+    } else {
+      await delUnfollow(userId);
+      setIsFollowed(false);
+    }
+    setIsLoading(false);
+  };
+
+  const handleRedirectToProfile = () => {
+    pushRoute(`/profile/${username}`);
   };
 
   return (
-    <div className='item' key={id}>
-      <div className='info-item'>
+    <div className='item' key={userId}>
+      <div className='info-item' onClick={() => handleRedirectToProfile()}>
         <img src={`data:image/png;base64, ${img}`} alt='' />
         <div className='group-info'>
           <span className='username'>{username}</span>

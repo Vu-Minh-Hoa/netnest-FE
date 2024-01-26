@@ -23,12 +23,22 @@ const LoginPage = () => {
   const {
     register,
     handleSubmit,
+    formState,
+    watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const [autToken, setAutToken] = useState(localStorage.getItem('token') || '');
-  const [isLoading, setIsLoading] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { pushRoute } = useRouter();
+  const allValue = watch();
+
+  useEffect(() => {
+    if (errorText) {
+      setErrorText('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allValue]);
 
   useEffect(() => {
     if (autToken) {
@@ -48,13 +58,14 @@ const LoginPage = () => {
           data: { email: data.email, passWord: data.password },
         }),
       onSuccess: async ({ token }) => {
-        if (!token) return;
+        if (!token) {
+          setErrorText('Username hoặc mật khẩu không đúng');
+          return;
+        }
         dispatch(setToken(token));
+        setErrorText('');
         localStorage.setItem('token', token);
         pushRoute('/home');
-      },
-      onError: async () => {
-        setErrorText('Username hoặc mật khẩu không đúng');
       },
     });
     setIsLoading(false);
@@ -71,7 +82,9 @@ const LoginPage = () => {
           placeholder='Email'
           {...register('email')}
         />
-        <p className='login-errText'>{errors.email?.message}</p>
+        {errors.email?.message && (
+          <p className='login-errText'>{errors.email?.message}</p>
+        )}
         <input
           className='login-password'
           rows='10'
@@ -80,12 +93,16 @@ const LoginPage = () => {
           placeholder='Password'
           {...register('password')}
         />
-        <p className='login-errText'>{errors.password?.message}</p>
+        {errors.password?.message && (
+          <p className='login-errText'>{errors.password?.message}</p>
+        )}
+        {errorText && <p className='login-errText'>{errorText}</p>}
         <Button
           isLoading={isLoading}
           btnType='submit'
           text='Login'
           className='login-button'
+          isDisabled={!formState.isDirty || !!errorText}
         />
 
         <a href='/register' className='login-dontHave'>

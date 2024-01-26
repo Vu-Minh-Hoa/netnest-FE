@@ -23,8 +23,8 @@ const ChatModal = ({
   const { token } = useSelector((state) => state.user);
   const { action } = useAction();
 
-  const handleLeaveChat = () => {
-    onLeaveChat && onLeaveChat();
+  const handleLeaveChat = async () => {
+    (await onLeaveChat) && onLeaveChat();
   };
 
   const handleCloseChatModal = () => {
@@ -164,7 +164,7 @@ const ChatModal = ({
       )}
       {currentUserAction === USER_CHAT_ACTION.USER_ACTION && (
         <DelModal
-          onDelte={handleLeaveChat}
+          onDelete={handleLeaveChat}
           onClose={handleCloseChatModal}
           text='Leave'
         />

@@ -1,33 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import HorizontalDot from '../../assets/svg/horizontalDot';
+import { DISPLAY_BASE64 } from '../../contants/common';
 import { postCommentReaction } from '../../services/like.service';
 import Like from '../common/like/like';
-import { DISPLAY_BASE64 } from '../../contants/common';
 
-const PostComment = ({ commentsItem, key, onLike, token, onDeleteComment }) => {
-  const [likeAmount, setLikeAmount] = useState(false);
+const PostComment = ({ commentsItem, onLike, onDeleteComment }) => {
+  const [likeAmount, setLikeAmount] = useState(0);
   const [isCommentLiked, setIsCommentLiked] = useState(false);
-  const { user } = useSelector((store) => store.user);
-
-  useEffect(() => {
-    console.log(commentsItem.countLike, ': ', commentsItem.commentID);
-    setLikeAmount(commentsItem?.countLike);
-    setIsCommentLiked(commentsItem?.statusLike);
-  }, [commentsItem?.countLike, commentsItem?.statusLike]);
+  const { user, token } = useSelector((store) => store.user);
 
   const handleLikeComment = async () => {
     const data = await postCommentReaction({
       isLiked: isCommentLiked,
       token,
-      commentId: commentsItem.commentID,
+      commentId: commentsItem?.commentID,
     });
 
-    if (!data) return;
-
     if (Object?.keys(data)?.length) {
+      setLikeAmount(data?.countLike);
       setIsCommentLiked((prev) => !prev);
-      setLikeAmount(data.countLike);
     }
   };
 
@@ -36,10 +28,7 @@ const PostComment = ({ commentsItem, key, onLike, token, onDeleteComment }) => {
   };
 
   return (
-    <li
-      key={key}
-      className='view-post__user-info view-post__comment-section__comment'
-    >
+    <li className='view-post__user-info view-post__comment-section__comment'>
       <div className='view-post__comment-section__comment__user-img__wrapper'>
         <div className='view-post__user-img view-post__comment-section__comment__user-img'>
           <img
@@ -57,7 +46,7 @@ const PostComment = ({ commentsItem, key, onLike, token, onDeleteComment }) => {
         </p>
         <span className='view-post__timestamp'>{commentsItem?.createDate}</span>
         <div className='view-post__action'>
-          <span>{likeAmount || 0} likes</span>
+          <span>{commentsItem?.countLike || likeAmount || 0} likes</span>
           {user.userId === commentsItem?.user?.userId && (
             <div
               className='view-post__comment-section__user-action'
@@ -72,7 +61,7 @@ const PostComment = ({ commentsItem, key, onLike, token, onDeleteComment }) => {
         <Like
           onClick={() => handleLikeComment()}
           classname='view-post__reaction__like'
-          isLiked={isCommentLiked}
+          isLiked={isCommentLiked || commentsItem?.statusLike}
         />
       </div>
     </li>
