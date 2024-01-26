@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import logoImg from '../../assets/img/logo.jpg';
-import defaultUser from '../../assets/img/user.jpg';
 import ChatSvg from '../../assets/svg/chatSvg';
 import CreateSvg from '../../assets/svg/createSvg';
 import HomeSvg from '../../assets/svg/homeSVG';
@@ -13,11 +12,10 @@ import { API_LIST } from '../../contants/common';
 import { useAction } from '../../hooks/useAction';
 import { useRouter } from '../../hooks/useRouter';
 import { CHAT_LINK, HOME_LINK, PROFILE_LINK } from '../../links/link';
-import { get } from '../../services/request';
+import { get, post } from '../../services/request';
 import CreateModal from '../createModal/createModal';
 import SearchBar from '../search/search';
 import './navBar.scss';
-import { current } from '@reduxjs/toolkit';
 
 const NavBar = ({ onResizeNavBar }) => {
   const [isSmallTab, setIsSmallTab] = useState(false);
@@ -43,9 +41,22 @@ const NavBar = ({ onResizeNavBar }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPath, isSearchBarActive]);
 
-  const handleLogout = () => {
-    localStorage.setItem('token', '');
-    //localStorage.clear();
+  const postLogout = async () => {
+    await action({
+      action: async () =>
+        await post({
+          url: API_LIST.logout,
+          config: {
+            headers: { authorization: 'Bearer ' + token },
+          },
+        }),
+      onSuccess: async (data) => {},
+    });
+  };
+
+  const handleLogout = async () => {
+    await postLogout();
+    localStorage.clear();
     window.location.reload();
   };
 

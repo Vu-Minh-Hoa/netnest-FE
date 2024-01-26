@@ -27,8 +27,8 @@ const initRequest = () => {
     async (error) => {
       const { status } = error.response || {};
       if (status === 403 || status === undefined) {
-        // localStorage.removeItem('token');
-        // window.location.href = '/login';
+        localStorage.removeItem('token');
+        window.location.href = '/login';
       }
     },
   );

@@ -6,6 +6,7 @@ export const useLogout = () => {
 
   const resetState = () => {
     localStorage.setItem('token', '');
+    localStorage.clear();
     dispatch(setToken(''));
     window.location.reload();
   };
