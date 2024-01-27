@@ -39,12 +39,12 @@ const RegisterPage = () => {
   const [errorText, setErrorText] = useState('');
   const allValue = watch();
 
-  useEffect(() => {
-    if (errorText) {
-      setErrorText('');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allValue]);
+  // useEffect(() => {
+  //   if (errorText) {
+  //     setErrorText('');
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [allValue]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -70,13 +70,14 @@ const RegisterPage = () => {
           },
         }),
       onSuccess: async (data) => {
+        console.log(typeof data);
         if (data === 'đã add user thành công') {
           pushRoute('/login');
         } else if (data === 'email đã tồn tại') {
           setErrorText('Email exited');
         } else if (data === 'user_name đã tồn tại') {
           setErrorText('Username exited');
-        } else if (data === 'full_name đã tồn tại') {
+        } else {
           setErrorText('Fullname exited');
         }
       },
