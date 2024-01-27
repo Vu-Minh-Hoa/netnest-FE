@@ -201,7 +201,7 @@ export const Chat = ({
                       </AvatarGroup>
                     ) : (
                       <Avatar
-                        status={chat?.statusChat ? 'available' : 'unavailable'}
+                        status={chat?.statusChat ? 'available' : null}
                         src={
                           DISPLAY_BASE64.IMAGE +
                           userOthersInfo?.[0]?.base64Image

@@ -1,8 +1,7 @@
 import axiosBase from 'axios';
 // import exp from 'constants';
 
-const baseUrl =
-  'https://fd98-2405-4803-fd63-7070-d022-889c-f66b-1ec5.ngrok-free.app';
+const baseUrl = 'https://e566-118-71-204-229.ngrok-free.app';
 // const baseUrl = '';
 
 const initRequest = () => {
@@ -27,8 +26,8 @@ const initRequest = () => {
     async (error) => {
       const { status } = error.response || {};
       if (status === 403 || status === undefined) {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
+        // localStorage.removeItem('token');
+        // window.location.href = '/login';
       }
     },
   );
